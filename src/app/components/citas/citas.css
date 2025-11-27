@@ -1,0 +1,139 @@
+.citas-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.section-header {
+  margin-bottom: 2rem;
+  border-left: 5px solid #4a2e1f;
+  padding-left: 1.5rem;
+}
+
+.section-header h1 {
+  font-family: 'Anton', sans-serif;
+  color: #4a2e1f;
+  font-size: 2.5rem;
+  margin-bottom: 0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.section-header .subtitle {
+  font-family: 'Inter', sans-serif;
+  color: #6d4c41;
+  font-size: 1rem;
+}
+
+.custom-card {
+  background-color: #fdf5eb !important;
+  border-radius: 16px !important;
+  box-shadow: 0 4px 20px rgba(74, 46, 31, 0.08) !important;
+  border: 1px solid rgba(74, 46, 31, 0.1) !important;
+  padding: 1rem;
+}
+
+.filter-container {
+  margin-bottom: 1.5rem;
+}
+
+::ng-deep .custom-form-field .mat-mdc-text-field-wrapper {
+  background-color: #fff !important;
+  border-radius: 8px;
+}
+
+::ng-deep .custom-form-field .mat-mdc-form-field-focus-overlay {
+  background-color: transparent !important;
+}
+
+.table-container {
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(74, 46, 31, 0.1);
+}
+
+table {
+  width: 100%;
+  background-color: #fdf5eb !important;
+}
+
+th.mat-mdc-header-cell {
+  background-color: #4a2e1f !important; 
+  color: #f3d2b2 !important; 
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+td.mat-mdc-cell {
+  color: #4e342e;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  border-bottom-color: rgba(74, 46, 31, 0.1) !important;
+  padding: 16px !important;
+}
+
+tr.mat-mdc-row:hover {
+  background-color: rgba(74, 46, 31, 0.05) !important;
+}
+
+.badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: inline-block;
+}
+
+.confirmada {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+  border: 1px solid #a5d6a7;
+}
+
+.pendiente {
+  background-color: #fff8e1;
+  color: #fbc02d;
+  border: 1px solid #ffe082;
+}
+
+.finalizada {
+  background-color: #e3f2fd;
+  color: #1565c0;
+  border: 1px solid #90caf9;
+}
+
+.cancelada {
+  background-color: #ffebee;
+  color: #c62828;
+  border: 1px solid #ef9a9a;
+}
+
+.action-btn {
+  color: #6d4c41 !important;
+}
+.action-btn:hover {
+  background-color: rgba(74, 46, 31, 0.1) !important;
+}
+
+.delete-btn {
+  color: #c62828 !important;
+}
+.delete-btn:hover {
+  background-color: rgba(198, 40, 40, 0.1) !important;
+}
+
+::ng-deep .mat-mdc-paginator {
+  background-color: transparent !important;
+  color: #4a2e1f !important;
+  font-family: 'Inter', sans-serif;
+}

@@ -1,0 +1,166 @@
+/* --- ANIMACIONES & BASE --- */
+.fade-in {
+  animation: fadeIn 0.8s ease-out;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.galeria-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 60px 20px;
+  color: #4a2e1f;
+}
+
+/* --- HEADER (Consistente con otras páginas) --- */
+.main-title {
+  font-family: 'Anton', sans-serif;
+  font-size: 4rem;
+  letter-spacing: 4px;
+  color: #4a2e1f;
+  margin-bottom: 10px;
+}
+
+.separator-line {
+  width: 100px;
+  height: 4px;
+  background-color: #4a2e1f;
+  margin: 0 auto 20px auto;
+}
+
+.subtitle {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.2rem;
+  font-style: italic;
+  color: #6d4c41;
+}
+
+/* --- COLLAGE GRID (La Magia) --- */
+.collage-grid {
+  display: grid;
+  /* 4 Columnas iguales */
+  grid-template-columns: repeat(4, 1fr); 
+  /* Altura base de filas, se ajustará automáticamente */
+  grid-auto-rows: 280px; 
+  gap: 15px;
+}
+
+/* Configuración de cada Item del Collage */
+.gallery-item {
+  position: relative;
+  overflow: hidden;
+  border-radius: 4px; /* Ligero borde redondeado */
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+  cursor: pointer;
+  /* Borde tipo marco */
+  border: 4px solid #f3d2b2; 
+  outline: 1px solid #4a2e1f;
+}
+
+.gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease, filter 0.5s ease;
+  /* Filtro Vintage inicial */
+  filter: sepia(40%) contrast(110%) brightness(90%);
+}
+
+/* HOVER EFFECT */
+.gallery-item:hover img {
+  transform: scale(1.1); /* Zoom suave */
+  filter: sepia(0%) contrast(100%) brightness(100%); /* Color real */
+}
+
+/* Overlay con Texto */
+.overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(74, 46, 31, 0.9), transparent);
+  padding: 20px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.3s ease;
+  z-index: 2;
+}
+
+.overlay span {
+  color: #f3d2b2;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.gallery-item:hover .overlay {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* --- POSICIONES DEL COLLAGE (Desktop) --- */
+
+/* 1. Realista: Grande a la izquierda (2x2) */
+.item-main {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+
+/* 2. Blackwork: Ancha superior derecha (2x1) */
+.item-wide-top {
+  grid-column: span 2;
+  grid-row: span 1;
+}
+
+/* 3. Old School: Cuadrada derecha (1x1) */
+.item-square {
+  grid-column: span 1;
+  grid-row: span 1;
+}
+
+/* 4. Diseño 1: Cuadrada derecha (1x1) */
+.item-square-2 {
+  grid-column: span 1;
+  grid-row: span 1;
+}
+
+/* 5. Diseño 2: Panorámica inferior (4x1) */
+.item-wide-bottom {
+  grid-column: span 4;
+  grid-row: span 1;
+  height: 350px !important; /* Forzamos un poco más de altura para la panorámica */
+}
+
+/* --- RESPONSIVE (Tablet y Móvil) --- */
+@media (max-width: 991px) {
+  .collage-grid {
+    grid-template-columns: repeat(2, 1fr); /* 2 Columnas en tablet */
+    grid-auto-rows: 250px;
+  }
+  
+  /* Reajuste de posiciones para 2 columnas */
+  .item-main { grid-column: span 2; }
+  .item-wide-top { grid-column: span 2; }
+  .item-square { grid-column: span 1; }
+  .item-square-2 { grid-column: span 1; }
+  .item-wide-bottom { grid-column: span 2; height: 250px !important; }
+}
+
+@media (max-width: 576px) {
+  .main-title { font-size: 3rem; }
+  
+  .collage-grid {
+    display: flex;
+    flex-direction: column; /* Pila simple en móvil */
+    gap: 20px;
+  }
+  
+  .gallery-item {
+    height: 300px; /* Altura fija para todos en móvil */
+    width: 100%;
+  }
+}

@@ -1,0 +1,93 @@
+<div class="citas-container">
+
+  <div class="section-header">
+    <h1>Gestión de Citas</h1>
+    <span class="subtitle">Agenda y control de clientes</span>
+  </div>
+
+  <mat-card class="custom-card">
+    <mat-card-content>
+
+      <div class="filter-container">
+        <mat-form-field appearance="outline" class="w-100 custom-form-field">
+          <mat-label>Buscar cita por cliente, artista o estado...</mat-label>
+          <input matInput (keyup)="applyFilter($event)" placeholder="Ej. Juan Pérez" #input>
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+      </div>
+
+      <div class="table-container mat-elevation-z0">
+        <table mat-table [dataSource]="dataSource" matSort>
+
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+            <td mat-cell *matCellDef="let row"> #{{row.id}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="fecha">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha </th>
+            <td mat-cell *matCellDef="let row"> 
+              <div class="d-flex flex-column">
+                <span class="fw-bold">{{row.fecha | date:'dd MMM yyyy'}}</span>
+                <small class="text-muted">{{row.fecha | date:'shortTime'}}</small>
+              </div>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="cliente">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Cliente </th>
+            <td mat-cell *matCellDef="let row"> 
+              <div class="d-flex align-items-center gap-2">
+                <mat-icon class="text-muted" style="font-size: 20px; width: 20px; height: 20px;">person</mat-icon>
+                {{row.cliente}}
+              </div>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="artista">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Artista </th>
+            <td mat-cell *matCellDef="let row"> {{row.artista}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="estado">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado </th>
+            <td mat-cell *matCellDef="let row"> 
+              <span [class]="'badge ' + row.estado.toLowerCase()">
+                {{row.estado}}
+              </span>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="total">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Total </th>
+            <td mat-cell *matCellDef="let row" class="fw-bold"> {{row.total | currency}} </td>
+          </ng-container>
+
+           <ng-container matColumnDef="acciones">
+            <th mat-header-cell *matHeaderCellDef> Acciones </th>
+            <td mat-cell *matCellDef="let row">
+              <button mat-icon-button class="action-btn" matTooltip="Editar">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button class="delete-btn" matTooltip="Cancelar/Borrar">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell text-center py-4" colspan="7">
+              No se encontraron resultados para "{{input.value}}"
+            </td>
+          </tr>
+        </table>
+
+        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons aria-label="Select page of periodic elements">
+        </mat-paginator>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -1,0 +1,186 @@
+/* --- CONTENEDOR PRINCIPAL --- */
+.clientes-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  animation: fadeIn 0.5s ease-out;
+  color: #4a2e1f;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- ENCABEZADOS --- */
+.section-header {
+  margin-bottom: 2rem;
+  border-left: 5px solid #4a2e1f;
+  padding-left: 1.5rem;
+}
+
+.section-header h1 {
+  font-family: 'Anton', sans-serif;
+  color: #4a2e1f !important;
+  font-size: 2.5rem;
+  margin-bottom: 0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.section-header .subtitle {
+  font-family: 'Inter', sans-serif;
+  color: #6d4c41 !important;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+/* --- TARJETA --- */
+.custom-card {
+  background-color: #fdf5eb !important;
+  border-radius: 16px !important;
+  box-shadow: 0 4px 20px rgba(74, 46, 31, 0.08) !important;
+  border: 1px solid rgba(74, 46, 31, 0.1) !important;
+  padding: 1rem;
+}
+
+/* --- FORMULARIOS & INPUTS --- */
+::ng-deep .custom-form-field .mat-mdc-text-field-wrapper {
+  background-color: #ffffff !important;
+  border-radius: 8px;
+  border: 1px solid rgba(74, 46, 31, 0.1);
+}
+
+::ng-deep .mat-mdc-input-element {
+  color: #4a2e1f !important;
+}
+
+/* --- BOTÓN NUEVO CLIENTE --- */
+.add-btn {
+  background-color: #4a2e1f !important;
+  color: #f3d2b2 !important;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  letter-spacing: 1px;
+  border-radius: 8px !important;
+  height: 56px;
+}
+
+.add-btn:hover {
+  background-color: #2b1a10 !important;
+}
+
+/* --- TABLA --- */
+.table-container {
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(74, 46, 31, 0.1);
+  margin-top: 1rem;
+}
+
+table {
+  width: 100%;
+  background-color: #fdf5eb !important;
+}
+
+th.mat-mdc-header-cell {
+  background-color: #4a2e1f !important;
+  color: #f3d2b2 !important;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+td.mat-mdc-cell {
+  color: #3e2723 !important;
+  font-family: 'Inter', sans-serif;
+  padding: 16px !important;
+  border-bottom-color: rgba(74, 46, 31, 0.1) !important;
+}
+
+tr.mat-mdc-row:hover {
+  background-color: rgba(74, 46, 31, 0.08) !important;
+}
+
+/* --- AVATAR CIRCLE --- */
+.avatar-circle {
+  width: 40px;
+  height: 40px;
+  background-color: #4a2e1f;
+  color: #f3d2b2;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Anton', sans-serif;
+  font-size: 1.2rem;
+  border: 2px solid #8d6e63;
+}
+
+/* --- CONTACT ROWS --- */
+.tiny-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+  color: #8d6e63;
+}
+.contact-row {
+  font-size: 0.9rem;
+  color: #4e342e;
+}
+
+/* --- BADGES (ESTADOS CLIENTE) --- */
+.badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  display: inline-block;
+}
+
+/* VIP: Dorado/Negro elegante */
+.vip {
+  background-color: #2b1a10;
+  color: #ffd700; /* Oro */
+  border: 1px solid #ffd700;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.frecuente {
+  background-color: #e3f2fd;
+  color: #1565c0;
+  border: 1px solid #90caf9;
+}
+
+.nuevo {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+  border: 1px solid #a5d6a7;
+}
+
+.inactivo {
+  background-color: #eceff1;
+  color: #78909c;
+  border: 1px solid #cfd8dc;
+}
+
+/* --- UTILIDADES --- */
+.text-muted { color: #8d6e63 !important; }
+.fw-bold { font-weight: 700; }
+.fs-6 { font-size: 1.1rem; }
+.text-dark-brown { color: #2b1a10; }
+
+/* Botones de Acción */
+.action-btn { color: #5d4037 !important; }
+.edit-btn { color: #1976d2 !important; }
+
+/* Paginador */
+::ng-deep .mat-mdc-paginator {
+  background-color: transparent !important;
+  color: #4a2e1f !important;
+}
+::ng-deep .mat-mdc-paginator-icon {
+  fill: #4a2e1f !important;
+}

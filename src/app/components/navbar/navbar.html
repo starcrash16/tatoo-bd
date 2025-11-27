@@ -1,0 +1,69 @@
+<nav class="navbar navbar-expand-lg custom-nav px-4 py-3">
+  <div class="container-fluid d-flex justify-content-between align-items-center">
+
+    <a class="navbar-brand d-flex align-items-center gap-2 cursor-pointer" routerLink="/">
+      <img src="logo-astronauta.png" height="45" alt="logo" class="logo-img">
+      <span class="brand-text">GANGSTER</span>
+    </a>
+
+    <!-- 
+      MODIFICACIÓN: 
+      Quitamos data-bs-toggle y usamos (click)="toggleMenu()" 
+    -->
+    <button class="navbar-toggler custom-toggler" type="button" 
+            (click)="toggleMenu()"
+            aria-controls="navItems" [attr.aria-expanded]="isMenuOpen" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- 
+      MODIFICACIÓN: 
+      [class.show]="isMenuOpen" agrega la clase 'show' de Bootstrap cuando la variable es true 
+    -->
+    <div class="collapse navbar-collapse" [class.show]="isMenuOpen" id="navItems">
+      <ul class="navbar-nav ms-auto gap-4 fs-5 align-items-center">
+
+        <li class="nav-item">
+          <!-- Agregamos (click)="closeMenu()" para que se cierre al navegar en móvil -->
+          <a class="nav-link cursor-pointer" routerLink="/" (click)="closeMenu()">Inicio</a>
+        </li>
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle cursor-pointer" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Artistas
+          </a>
+          <ul class="dropdown-menu border-0 shadow-lg">
+            <li><a class="dropdown-item cursor-pointer" routerLink="/artistas" fragment="artista1" (click)="closeMenu()">Alex Ink</a></li>
+            <li><a class="dropdown-item cursor-pointer" routerLink="/artistas" fragment="artista2" (click)="closeMenu()">Sofia Art</a></li>
+          </ul>
+        </li>
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle cursor-pointer" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Estilos
+          </a>
+          <ul class="dropdown-menu border-0 shadow-lg">
+            <!-- VINCULACIÓN DE ESTILOS CON FRAGMENTOS -->
+            <li><a class="dropdown-item cursor-pointer" routerLink="/estilos" fragment="realista" (click)="closeMenu()">Realista</a></li>
+            <li><a class="dropdown-item cursor-pointer" routerLink="/estilos" fragment="blackwork" (click)="closeMenu()">Blackwork</a></li>
+            <li><a class="dropdown-item cursor-pointer" routerLink="/estilos" fragment="oldschool" (click)="closeMenu()">Old School</a></li>
+          </ul>
+        </li>
+
+        <li class="nav-item"><a class="nav-link cursor-pointer" routerLink="/galeria" (click)="closeMenu()">Galería</a></li>
+
+        <li class="nav-item d-none d-lg-flex align-items-center gap-2 info-text">
+          <span class="hora">{{ horaActual }}</span>
+          <span class="ubicacion">• Aguascalientes</span>
+        </li>
+
+        <li class="nav-item">
+          <button class="btn reservar-btn px-4 py-2 rounded-pill shadow-sm" routerLink="/contacto" (click)="closeMenu()">
+            Agendar →
+          </button>
+        </li>
+
+      </ul>
+    </div>
+  </div>
+</nav>

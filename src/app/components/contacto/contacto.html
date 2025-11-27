@@ -1,0 +1,104 @@
+<div class="contacto-container fade-in">
+  
+  <div class="header-section text-center mb-5">
+    <h1 class="main-title">CONTÁCTANOS</h1>
+    <div class="separator-line"></div>
+    <p class="subtitle">¿Listo para tu próxima pieza? Hablemos.</p>
+  </div>
+
+  <div class="content-card">
+    <div class="row g-0">
+      
+      <!-- COLUMNA FORMULARIO -->
+      <div class="col-lg-7 p-4 p-md-5 form-column">
+        <h3 class="column-title mb-4">Envíanos un mensaje</h3>
+        
+        <form [formGroup]="contactForm" (ngSubmit)="enviarMensaje()">
+          
+          <div class="row">
+            <!-- Nombre -->
+            <div class="col-md-6">
+              <mat-form-field appearance="outline" class="w-100 custom-field">
+                <mat-label>Nombre</mat-label>
+                <input matInput formControlName="nombre" placeholder="Ej. Juan">
+                <mat-error *ngIf="contactForm.get('nombre')?.hasError('required')">Requerido</mat-error>
+              </mat-form-field>
+            </div>
+
+            <!-- Apellido -->
+            <div class="col-md-6">
+              <mat-form-field appearance="outline" class="w-100 custom-field">
+                <mat-label>Apellido</mat-label>
+                <input matInput formControlName="apellido" placeholder="Ej. Pérez">
+                <mat-error *ngIf="contactForm.get('apellido')?.hasError('required')">Requerido</mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <!-- Correo -->
+          <mat-form-field appearance="outline" class="w-100 custom-field">
+            <mat-label>Correo Electrónico</mat-label>
+            <input matInput formControlName="correo" placeholder="ejemplo@correo.com">
+            <mat-icon matSuffix>email</mat-icon>
+            <mat-error *ngIf="contactForm.get('correo')?.hasError('email')">Correo inválido</mat-error>
+          </mat-form-field>
+
+          <!-- Mensaje -->
+          <mat-form-field appearance="outline" class="w-100 custom-field">
+            <mat-label>Cuéntanos tu idea</mat-label>
+            <textarea matInput formControlName="mensaje" rows="5" placeholder="Descripción del diseño, zona del cuerpo, tamaño..."></textarea>
+            <mat-error *ngIf="contactForm.get('mensaje')?.hasError('minlength')">Mínimo 10 caracteres</mat-error>
+          </mat-form-field>
+
+          <!-- Botón Submit -->
+          <div class="d-grid mt-3">
+            <button mat-flat-button class="submit-btn py-4" [disabled]="contactForm.invalid || isSubmitting">
+              {{ isSubmitting ? 'ENVIANDO...' : 'ENVIAR MENSAJE' }}
+            </button>
+          </div>
+
+        </form>
+      </div>
+
+      <!-- COLUMNA INFO (Lado derecho estilo oscuro) -->
+      <div class="col-lg-5 p-4 p-md-5 info-column d-flex flex-column justify-content-center">
+        
+        <div class="info-item mb-4">
+          <div class="icon-circle mb-3">
+            <mat-icon>location_on</mat-icon>
+          </div>
+          <h4 class="info-title">UBICACIÓN</h4>
+          <p class="info-text">
+            Calle del Arte #123, Centro Histórico<br>
+            Aguascalientes, Ags. México
+          </p>
+        </div>
+
+        <div class="info-item mb-4">
+          <div class="icon-circle mb-3">
+            <mat-icon>schedule</mat-icon>
+          </div>
+          <h4 class="info-title">HORARIO</h4>
+          <p class="info-text">
+            Lunes a Sábado<br>
+            11:00 AM - 8:00 PM
+          </p>
+        </div>
+
+        <div class="info-item">
+          <div class="icon-circle mb-3">
+            <mat-icon>call</mat-icon>
+          </div>
+          <h4 class="info-title">CONTACTO DIRECTO</h4>
+          <p class="info-text">
+            +52 (449) 123 4567<br>
+            citas@gangstertattoo.com
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+</div>

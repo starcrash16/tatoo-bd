@@ -1,0 +1,30 @@
+<div class="text-center pt-5">
+  <h1 class="titulo-flotante bbh-sans-hegarty-regular"
+      style="font-size: 100px; letter-spacing: 6px; color: #4a2e1f;">
+    GANGSTER TATTOO
+  </h1>
+
+  <h1 class="titulo-pulso bbh-sans-hegarty-regular"
+      style="font-size: 100px; margin-top: -40px; letter-spacing: 6px; color: #4a2e1f;">
+    STUDIO
+  </h1>
+</div>
+
+<div class="d-flex justify-content-center my-5 pb-5 position-relative">
+  <div class="astronauta-container">
+    <img src="astronauta-vitruvio.png"
+         alt="Astronaut Studio"
+         class="logo-home astronauta-giratorio"
+         [ngClass]="{
+           'girar-abajo': scrollDirection === 'down',
+           'girar-arriba': scrollDirection === 'up'
+         }">
+
+    <div class="ingresar-overlay">
+      <button class="btn btn-ingresar" (click)="ingresarAlSistema()">
+        INGRESAR
+      </button>
+    </div>
+
+  </div>
+</div>

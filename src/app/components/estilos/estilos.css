@@ -1,0 +1,119 @@
+/* Animación de entrada */
+.fade-in {
+  animation: fadeIn 0.8s ease-out;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.estilos-container {
+  width: 100%; 
+  padding: 60px 0;
+  color: #4a2e1f;
+}
+
+/* --- HEADER PRINCIPAL --- */
+.main-title {
+  font-family: 'Anton', sans-serif;
+  font-size: 4rem;
+  letter-spacing: 4px;
+  color: #4a2e1f;
+  margin-bottom: 10px;
+}
+
+.separator-line {
+  width: 100px;
+  height: 4px;
+  background-color: #4a2e1f;
+  margin: 0 auto 20px auto;
+}
+
+.subtitle {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.2rem;
+  font-style: italic;
+  color: #6d4c41;
+}
+
+/* --- SECCIONES CON FONDO (LA PARTE CLAVE) --- */
+.style-section-bg {
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  /* Altura generosa para apreciar el fondo */
+  padding: 140px 0; 
+  margin-bottom: 2rem;
+  overflow: hidden;
+  /* Efecto Parallax simple: la imagen se queda quieta al hacer scroll */
+  background-attachment: fixed; 
+}
+
+/* --- CAPA OSCURA Y DIFUMINADA --- */
+.style-section-bg::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  /* Capa café muy oscuro semitransparente */
+  background-color: rgba(43, 26, 16, 0.75); 
+  /* Efecto de vidrio esmerilado */
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 1;
+  /* Sombra interna suave en los bordes para viñeteado */
+  box-shadow: inset 0 0 100px rgba(0,0,0,0.9);
+}
+
+/* El contenido debe estar POR ENCIMA de la capa oscura */
+.style-section-bg .container {
+  position: relative;
+  z-index: 2;
+}
+
+/* --- TEXTOS CLAROS (Para contraste sobre fondo oscuro) --- */
+.style-name-light {
+  font-family: 'Anton', sans-serif;
+  font-size: 3.5rem;
+  color: #f3d2b2; /* Crema brillante */
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 0 4px 15px rgba(0,0,0,0.6);
+}
+
+.style-tag-light {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  color: #e0c0a0; /* Crema apagado */
+  margin-bottom: 1.5rem;
+  font-size: 1.3rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.desc-text-light p {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.15rem;
+  line-height: 1.8;
+  color: #f5f5f5; /* Blanco hueso */
+  margin-bottom: 1rem;
+  font-weight: 300;
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 991px) {
+  .style-section-bg { 
+    padding: 80px 0; 
+    /* En móviles quitamos el fixed para mejorar rendimiento y evitar saltos */
+    background-attachment: scroll; 
+  }
+  
+  .main-title { font-size: 3rem; }
+  
+  /* Centramos todo en móvil */
+  .style-name-light, .style-tag-light, .desc-text-light {
+    text-align: center !important;
+  }
+}

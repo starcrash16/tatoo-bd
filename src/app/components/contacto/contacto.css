@@ -1,0 +1,162 @@
+/* --- BASE --- */
+.fade-in {
+  animation: fadeIn 0.8s ease-out;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.contacto-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 60px 20px;
+  color: #4a2e1f;
+}
+
+/* --- HEADER --- */
+.main-title {
+  font-family: 'Anton', sans-serif;
+  font-size: 4rem;
+  letter-spacing: 4px;
+  color: #4a2e1f;
+  margin-bottom: 10px;
+}
+
+.separator-line {
+  width: 100px;
+  height: 4px;
+  background-color: #4a2e1f;
+  margin: 0 auto 20px auto;
+}
+
+.subtitle {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.2rem;
+  font-style: italic;
+  color: #6d4c41;
+}
+
+/* --- TARJETA PRINCIPAL --- */
+.content-card {
+  background-color: #fff;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 15px 40px rgba(74, 46, 31, 0.15);
+  border: 1px solid rgba(74, 46, 31, 0.1);
+}
+
+/* --- COLUMNA FORMULARIO (IZQUIERDA) --- */
+.form-column {
+  background-color: #fdf5eb; /* Crema muy claro */
+}
+
+.column-title {
+  font-family: 'Anton', sans-serif;
+  color: #4a2e1f;
+  letter-spacing: 1px;
+}
+
+/* Personalización de Inputs Material para que sean CAFÉS */
+::ng-deep .custom-field .mat-mdc-text-field-wrapper {
+  background-color: #fff !important;
+  border-radius: 8px;
+}
+
+::ng-deep .custom-field .mat-mdc-form-field-focus-overlay {
+  background-color: transparent !important;
+}
+
+/* Color del borde al enfocar */
+::ng-deep .custom-field.mat-focused .mat-mdc-notched-outline__border {
+  border-color: #4a2e1f !important;
+  border-width: 2px !important;
+}
+
+/* Color del label flotante */
+::ng-deep .custom-field.mat-focused .mat-mdc-floating-label {
+  color: #4a2e1f !important;
+}
+
+/* Color del icono */
+::ng-deep .custom-field .mat-icon {
+  color: #6d4c41;
+}
+
+/* BOTÓN DE ENVÍO */
+.submit-btn {
+  background-color: #4a2e1f !important; /* Café marca */
+  color: #f3d2b2 !important; /* Texto crema */
+  font-family: 'Inter', sans-serif !important;
+  font-weight: 700 !important;
+  letter-spacing: 2px;
+  font-size: 1.1rem !important;
+  border-radius: 8px !important;
+  transition: all 0.3s ease;
+}
+
+.submit-btn:hover:not([disabled]) {
+  background-color: #2b1a10 !important; /* Café más oscuro */
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* --- COLUMNA INFORMACIÓN (DERECHA) --- */
+.info-column {
+  background-color: #4a2e1f; /* Fondo oscuro para contraste */
+  color: #f3d2b2;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Patrón de fondo sutil para la columna oscura */
+.info-column::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23f3d2b2' fill-opacity='0.05' fill-rule='evenodd'%3E%3Ccircle cx='3' cy='3' r='3'/%3E%3Ccircle cx='13' cy='13' r='3'/%3E%3C/g%3E%3C/svg%3E");
+  opacity: 1;
+}
+
+.icon-circle {
+  width: 60px;
+  height: 60px;
+  background-color: rgba(243, 210, 178, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  border: 1px solid rgba(243, 210, 178, 0.3);
+}
+
+.icon-circle mat-icon {
+  font-size: 28px;
+  width: 28px;
+  height: 28px;
+  color: #f3d2b2;
+}
+
+.info-title {
+  font-family: 'Anton', sans-serif;
+  letter-spacing: 2px;
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  color: #f3d2b2;
+}
+
+.info-text {
+  font-family: 'Inter', sans-serif;
+  color: #d7ccc8; /* Gris/Crema suave */
+  line-height: 1.6;
+  font-size: 1rem;
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 991px) {
+  .main-title { font-size: 3rem; }
+  .content-card { margin-bottom: 40px; }
+  .info-column { padding: 60px 20px; }
+}

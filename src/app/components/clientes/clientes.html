@@ -1,0 +1,124 @@
+<div class="clientes-container">
+
+  <!-- Encabezado Estilo Gangster -->
+  <div class="section-header">
+    <h1>Cartera de Clientes</h1>
+    <span class="subtitle">Gestión de relaciones y fidelidad</span>
+  </div>
+
+  <mat-card class="custom-card">
+    <mat-card-content>
+      
+      <!-- Toolbar: Buscador y Botón Nuevo -->
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-3 gap-3">
+        
+        <div class="filter-container flex-grow-1 w-100">
+          <mat-form-field appearance="outline" class="w-100 custom-form-field">
+            <mat-label>Buscar cliente por nombre, correo o estatus...</mat-label>
+            <input matInput (keyup)="applyFilter($event)" placeholder="Ej. Juan Pérez" #input>
+            <mat-icon matSuffix>search</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <button mat-flat-button class="add-btn py-4 px-4">
+          <mat-icon>person_add</mat-icon> NUEVO CLIENTE
+        </button>
+
+      </div>
+
+      <!-- Tabla -->
+      <div class="table-container mat-elevation-z0">
+        <table mat-table [dataSource]="dataSource" matSort>
+
+          <!-- Nombre Column (Con Avatar) -->
+          <ng-container matColumnDef="nombre">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Cliente </th>
+            <td mat-cell *matCellDef="let row"> 
+              <div class="d-flex align-items-center gap-3">
+                <!-- Avatar Circle -->
+                <div class="avatar-circle">
+                  {{row.nombre.charAt(0)}}
+                </div>
+                <div class="d-flex flex-column">
+                  <span class="fw-bold fs-6">{{row.nombre}}</span>
+                  <small class="text-muted">ID: {{row.id}}</small>
+                </div>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Contacto Column -->
+          <ng-container matColumnDef="contacto">
+            <th mat-header-cell *matHeaderCellDef> Contacto </th>
+            <td mat-cell *matCellDef="let row"> 
+              <div class="d-flex flex-column gap-1">
+                <div class="d-flex align-items-center gap-2 contact-row">
+                  <mat-icon class="tiny-icon">email</mat-icon>
+                  <span>{{row.correo}}</span>
+                </div>
+                <div class="d-flex align-items-center gap-2 contact-row">
+                  <mat-icon class="tiny-icon">phone</mat-icon>
+                  <span>{{row.telefono}}</span>
+                </div>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Historial Column (Dinero y Visitas) -->
+          <ng-container matColumnDef="historial">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Historial </th>
+            <td mat-cell *matCellDef="let row"> 
+              <div class="d-flex flex-column">
+                <span class="fw-bold text-dark-brown">{{row.totalGastado | currency}}</span>
+                <small class="text-muted">{{row.visitas}} visitas totales</small>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Ultima Visita Column -->
+          <ng-container matColumnDef="ultimaVisita">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Última Visita </th>
+            <td mat-cell *matCellDef="let row"> 
+              {{row.ultimaVisita | date:'dd MMM yyyy'}}
+            </td>
+          </ng-container>
+
+          <!-- Estatus Column -->
+          <ng-container matColumnDef="estatus">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Estatus </th>
+            <td mat-cell *matCellDef="let row"> 
+              <span [class]="'badge ' + getStatusClass(row.estatus)">
+                {{row.estatus}}
+              </span>
+            </td>
+          </ng-container>
+
+          <!-- Acciones Column -->
+           <ng-container matColumnDef="acciones">
+            <th mat-header-cell *matHeaderCellDef> Acciones </th>
+            <td mat-cell *matCellDef="let row">
+              <button mat-icon-button class="action-btn" matTooltip="Ver Perfil Completo">
+                <mat-icon>visibility</mat-icon>
+              </button>
+              <button mat-icon-button class="edit-btn" matTooltip="Editar">
+                <mat-icon>edit</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+          <!-- Row shown when there is no matching data. -->
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell text-center py-4" colspan="6">
+              No se encontraron clientes para "{{input.value}}"
+            </td>
+          </tr>
+        </table>
+
+        <mat-paginator [pageSizeOptions]="[5, 10, 25]" showFirstLastButtons aria-label="Select page of clients"></mat-paginator>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
