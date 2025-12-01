@@ -1,0 +1,109 @@
+/* --- CONTENEDOR PRINCIPAL --- */
+.nuevo-producto-container {
+  max-width: 900px;
+  margin: 0 auto;
+  color: #4a2e1f;
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- BOTÓN VOLVER (Estilo mejorado) --- */
+.back-btn {
+  color: #6d4c41 !important; /* Café medio */
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+  padding-left: 0 !important; /* Alineación limpia a la izquierda */
+}
+
+.back-btn:hover {
+  color: #4a2e1f !important; /* Café oscuro al pasar mouse */
+  background-color: rgba(74, 46, 31, 0.08) !important; /* Fondo sutil */
+  transform: translateX(-5px); /* Animación de "regresar" hacia la izquierda */
+  border-radius: 8px;
+}
+
+/* --- ENCABEZADOS --- */
+.main-title {
+  font-family: 'Anton', sans-serif;
+  color: #4a2e1f;
+  font-size: 2.5rem;
+  margin-bottom: 5px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.subtitle {
+  font-family: 'Inter', sans-serif;
+  color: #6d4c41;
+}
+
+/* --- TARJETA DEL FORMULARIO --- */
+.form-card {
+  background-color: #fdf5eb !important;
+  border-radius: 16px !important;
+  box-shadow: 0 4px 20px rgba(74, 46, 31, 0.08) !important;
+  border: 1px solid rgba(74, 46, 31, 0.1) !important;
+}
+
+/* --- INPUTS PERSONALIZADOS (Estilo Consistente) --- */
+::ng-deep .custom-field .mat-mdc-text-field-wrapper {
+  background-color: #ffffff !important;
+  border-radius: 8px;
+  border: 1px solid rgba(74, 46, 31, 0.1);
+}
+
+::ng-deep .custom-field .mat-mdc-form-field-focus-overlay {
+  background-color: transparent !important;
+}
+
+/* Borde al enfocar (Focus) */
+::ng-deep .custom-field.mat-focused .mat-mdc-notched-outline__border {
+  border-color: #4a2e1f !important;
+  border-width: 2px !important;
+}
+
+/* Label flotante */
+::ng-deep .custom-field.mat-focused .mat-mdc-floating-label {
+  color: #4a2e1f !important;
+}
+
+/* Iconos */
+::ng-deep .custom-field .mat-icon {
+  color: #6d4c41;
+}
+
+/* Texto escrito */
+::ng-deep .mat-mdc-input-element {
+  color: #4a2e1f !important;
+  font-weight: 500;
+}
+
+/* --- BOTÓN GUARDAR --- */
+.save-btn {
+  background-color: #4a2e1f !important; /* Café oscuro */
+  color: #f3d2b2 !important; /* Texto crema */
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  letter-spacing: 1px;
+  border-radius: 8px !important;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(74, 46, 31, 0.2);
+}
+
+.save-btn:hover:not([disabled]) {
+  background-color: #2b1a10 !important; /* Café más oscuro */
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(74, 46, 31, 0.3);
+}
+
+.save-btn:disabled {
+  background-color: #8d6e63 !important;
+  opacity: 0.7;
+}

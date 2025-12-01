@@ -1,5 +1,8 @@
-import { Component, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, AfterViewInit, ViewChild, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router, RouterModule } from '@angular/router';
+// 1. IMPORTAR SERVICIO
+import { ClientesService } from '../../services/clientes-service';
 
 // Material Imports
 import { MatTableModule, MatTableDataSource } from '@angular/material/table';
@@ -11,23 +14,26 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatChipsModule } from '@angular/material/chips'; // Para los tags de preferencias
 
 export interface ClienteElement {
   id: number;
   nombre: string;
+  apellido: string;
   correo: string;
   telefono: string;
-  ultimaVisita: Date;
-  totalGastado: number;
-  visitas: number; // Cantidad de citas completadas
-  estatus: 'VIP' | 'Frecuente' | 'Nuevo' | 'Inactivo';
+  fecha_nacimiento: string;
+  // Campos opcionales calculados o futuros
+  totalGastado?: number;
+  visitas?: number;
+  estatus?: 'VIP' | 'Frecuente' | 'Nuevo' | 'Inactivo';
 }
 
 @Component({
   selector: 'app-clientes',
+  standalone: true,
   imports: [
     CommonModule,
+    RouterModule, // Para routerLink
     MatTableModule, 
     MatPaginatorModule, 
     MatSortModule,     
@@ -36,40 +42,50 @@ export interface ClienteElement {
     MatIconModule,
     MatFormFieldModule,
     MatInputModule,
-    MatTooltipModule,
-    MatChipsModule
+    MatTooltipModule
   ],
   templateUrl: './clientes.html',
   styleUrl: './clientes.css',
 })
-export class Clientes implements AfterViewInit {
+export class Clientes implements OnInit, AfterViewInit {
   
-  displayedColumns: string[] = ['nombre', 'contacto', 'historial', 'ultimaVisita', 'estatus', 'acciones'];
+  // Ajustamos columnas según lo que necesitamos mostrar en el HTML
+  displayedColumns: string[] = ['nombre', 'contacto', 'nacimiento', 'acciones'];
   
-  datosEjemplo: ClienteElement[] = [
-    { id: 1, nombre: 'Juan Pérez', correo: 'juan.perez@mail.com', telefono: '449-123-4567', ultimaVisita: new Date('2023-11-15'), totalGastado: 15500, visitas: 8, estatus: 'VIP' },
-    { id: 2, nombre: 'Maria Lopez', correo: 'marialopez@gmail.com', telefono: '449-987-6543', ultimaVisita: new Date('2023-10-05'), totalGastado: 4500, visitas: 3, estatus: 'Frecuente' },
-    { id: 3, nombre: 'Carlos Ruiz', correo: 'carlos.r@outlook.com', telefono: '449-555-8888', ultimaVisita: new Date(), totalGastado: 1200, visitas: 1, estatus: 'Nuevo' },
-    { id: 4, nombre: 'Ana Diaz', correo: 'ana.d@mail.com', telefono: '449-333-2211', ultimaVisita: new Date('2023-01-20'), totalGastado: 8000, visitas: 5, estatus: 'Inactivo' },
-    { id: 5, nombre: 'Roberto Gomez', correo: 'beto.g@gmail.com', telefono: '449-777-1122', ultimaVisita: new Date('2023-11-20'), totalGastado: 25000, visitas: 12, estatus: 'VIP' },
-  ];
-
-  dataSource = new MatTableDataSource<ClienteElement>(this.datosEjemplo);
+  dataSource = new MatTableDataSource<ClienteElement>([]);
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor() {}
+  // 2. INYECTAR SERVICIO Y ROUTER
+  constructor(
+    private clientesService: ClientesService,
+    private router: Router
+  ) {}
+
+  ngOnInit() {
+    this.cargarClientes();
+  }
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-    
-    // Filtro personalizado
-    this.dataSource.filterPredicate = (data: ClienteElement, filter: string) => {
-      const dataStr = data.nombre + data.correo + data.estatus;
-      return dataStr.toLowerCase().indexOf(filter) != -1;
-    };
+  }
+
+  cargarClientes() {
+    this.clientesService.getClientes().subscribe({
+      next: (data) => {
+        // Asignamos los datos que vienen del backend
+        this.dataSource.data = data;
+        
+        // Filtro personalizado para buscar por nombre, apellido o correo
+        this.dataSource.filterPredicate = (data: ClienteElement, filter: string) => {
+          const dataStr = (data.nombre + data.apellido + data.correo).toLowerCase();
+          return dataStr.indexOf(filter) != -1;
+        };
+      },
+      error: (err) => console.error('Error cargando clientes:', err)
+    });
   }
 
   applyFilter(event: Event) {
@@ -81,8 +97,8 @@ export class Clientes implements AfterViewInit {
     }
   }
 
-  // Helper para clases CSS según estatus
-  getStatusClass(status: string): string {
-    return status.toLowerCase();
+  // 3. NAVEGAR A NUEVO CLIENTE (Conectado al botón)
+  irANuevoCliente() {
+    this.router.navigate(['/dashboard/clientes/nuevo']);
   }
 }

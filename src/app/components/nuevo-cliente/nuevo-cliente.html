@@ -1,0 +1,96 @@
+<div class="nuevo-cliente-container fade-in">
+  
+  <div class="header-section mb-4">
+    <button mat-button routerLink="/dashboard/clientes" class="back-btn mb-2">
+      <mat-icon>arrow_back</mat-icon> Volver a Clientes
+    </button>
+    <h1 class="main-title">REGISTRAR CLIENTE</h1>
+    <p class="subtitle">Alta de perfil y expediente médico</p>
+  </div>
+
+  <mat-card class="form-card">
+    <mat-card-content class="p-4">
+      
+      <form [formGroup]="clienteForm" (ngSubmit)="onSubmit()">
+        
+        <!-- SECCIÓN 1: DATOS PERSONALES -->
+        <h3 class="section-divider">Información Personal</h3>
+        
+        <div class="row">
+          <div class="col-md-6">
+            <mat-form-field appearance="outline" class="w-100 custom-field">
+              <mat-label>Nombre(s)</mat-label>
+              <input matInput formControlName="nombre" placeholder="Ej. Ana María">
+              <mat-icon matSuffix>person</mat-icon>
+              <mat-error>Requerido</mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="col-md-6">
+            <mat-form-field appearance="outline" class="w-100 custom-field">
+              <mat-label>Apellidos</mat-label>
+              <input matInput formControlName="apellido" placeholder="Ej. López Pérez">
+              <mat-error>Requerido</mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <mat-form-field appearance="outline" class="w-100 custom-field">
+              <mat-label>Correo Electrónico</mat-label>
+              <input matInput formControlName="correo" placeholder="ejemplo@correo.com">
+              <mat-icon matSuffix>email</mat-icon>
+              <mat-error *ngIf="clienteForm.get('correo')?.hasError('email')">Correo inválido</mat-error>
+              <mat-error *ngIf="clienteForm.get('correo')?.hasError('required')">Requerido</mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="col-md-6">
+            <mat-form-field appearance="outline" class="w-100 custom-field">
+              <mat-label>Teléfono (10 dígitos)</mat-label>
+              <input matInput formControlName="telefono" placeholder="4491234567" type="tel">
+              <mat-icon matSuffix>phone</mat-icon>
+              <mat-error>10 dígitos requeridos</mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <mat-form-field appearance="outline" class="w-100 custom-field">
+              <mat-label>Fecha de Nacimiento</mat-label>
+              <input matInput [matDatepicker]="picker" formControlName="fecha_nacimiento">
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+              <mat-error>Requerido</mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <!-- SECCIÓN 2: DATOS MÉDICOS -->
+        <h3 class="section-divider mt-3">Expediente Médico</h3>
+
+        <mat-form-field appearance="outline" class="w-100 custom-field">
+          <mat-label>Alergias Conocidas</mat-label>
+          <textarea matInput formControlName="alergias" rows="2" placeholder="Látex, tinta roja, medicamentos, etc. (Dejar vacío si ninguna)"></textarea>
+          <mat-icon matSuffix class="warning-icon">warning</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-100 custom-field">
+          <mat-label>Condiciones Médicas / Notas</mat-label>
+          <textarea matInput formControlName="notas_medicas" rows="3" placeholder="Diabetes, problemas de coagulación, piel sensible, etc."></textarea>
+        </mat-form-field>
+
+        <!-- BOTÓN SUBMIT -->
+        <div class="d-flex justify-content-end mt-4">
+          <button mat-flat-button class="save-btn py-4 px-5" [disabled]="clienteForm.invalid || isSubmitting">
+            {{ isSubmitting ? 'GUARDANDO...' : 'REGISTRAR CLIENTE' }}
+          </button>
+        </div>
+
+      </form>
+
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -20,7 +20,7 @@ export class Home implements OnInit {
   ngOnInit() {}
 
   ingresarAlSistema() {
-    this.router.navigate(['/dashboard']);
+    this.router.navigate(['/login']);
   }
 
   @HostListener('window:scroll') 

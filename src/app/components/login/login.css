@@ -1,0 +1,189 @@
+/* --- BASE --- */
+.fade-in {
+  animation: fadeIn 0.8s ease-out;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  /* Fondo crema global */
+  background-color: #f3d2b2; 
+}
+
+/* --- TARJETA PRINCIPAL --- */
+.login-wrapper {
+  background-color: #fff;
+  width: 100%;
+  max-width: 900px;
+  min-height: 550px;
+  border-radius: 20px;
+  overflow: hidden;
+  display: flex;
+  box-shadow: 0 20px 50px rgba(74, 46, 31, 0.25);
+  border: 1px solid rgba(74, 46, 31, 0.1);
+}
+
+/* --- LADO IZQUIERDO (DECORATIVO) --- */
+.login-decoration {
+  flex: 1;
+  background-color: #2b1a10; /* Café casi negro */
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #f3d2b2;
+  overflow: hidden;
+}
+
+/* Textura de fondo (opcional) */
+.overlay-texture {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23f3d2b2' fill-opacity='0.05' fill-rule='evenodd'%3E%3Ccircle cx='3' cy='3' r='3'/%3E%3Ccircle cx='13' cy='13' r='3'/%3E%3C/g%3E%3C/svg%3E");
+  opacity: 0.5;
+}
+
+.decoration-content {
+  text-align: center;
+  position: relative;
+  z-index: 2;
+  border: 4px solid #f3d2b2;
+  padding: 40px;
+}
+
+.decoration-content h1 {
+  font-family: 'Anton', sans-serif;
+  font-size: 3.5rem;
+  letter-spacing: 4px;
+  margin: 0;
+  line-height: 1;
+}
+
+.decoration-content p {
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  letter-spacing: 3px;
+  margin-top: 10px;
+  opacity: 0.8;
+}
+
+/* --- LADO DERECHO (FORMULARIO) --- */
+.login-form-side {
+  flex: 1;
+  padding: 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: #fdf5eb; /* Crema muy claro */
+}
+
+.form-header {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.form-header h2 {
+  font-family: 'Anton', sans-serif;
+  font-size: 2.5rem;
+  color: #4a2e1f;
+  letter-spacing: 2px;
+  margin: 0;
+}
+
+.subtitle {
+  font-family: 'Inter', sans-serif;
+  color: #8d6e63;
+  margin-top: 5px;
+}
+
+/* --- INPUTS PERSONALIZADOS --- */
+::ng-deep .custom-field .mat-mdc-text-field-wrapper {
+  background-color: #fff !important;
+  border-radius: 8px;
+}
+
+::ng-deep .custom-field .mat-mdc-form-field-focus-overlay {
+  background-color: transparent !important;
+}
+
+/* Borde al enfocar */
+::ng-deep .custom-field.mat-focused .mat-mdc-notched-outline__border {
+  border-color: #4a2e1f !important;
+  border-width: 2px !important;
+}
+
+/* Label flotante */
+::ng-deep .custom-field.mat-focused .mat-mdc-floating-label {
+  color: #4a2e1f !important;
+}
+
+/* Iconos */
+::ng-deep .custom-field .mat-icon {
+  color: #6d4c41;
+}
+
+/* --- BOTÓN INGRESAR --- */
+.login-btn {
+  background-color: #4a2e1f !important;
+  color: #f3d2b2 !important;
+  font-family: 'Inter', sans-serif !important;
+  font-weight: 700 !important;
+  letter-spacing: 2px;
+  font-size: 1.1rem !important;
+  border-radius: 8px !important;
+  height: 55px;
+  transition: all 0.3s ease;
+}
+
+.login-btn:hover:not([disabled]) {
+  background-color: #2b1a10 !important;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.login-btn:disabled {
+  background-color: #8d6e63 !important;
+  opacity: 0.7;
+}
+
+/* Spinner dentro del botón */
+::ng-deep .mat-mdc-progress-spinner circle, .mat-spinner circle {
+    stroke: #f3d2b2 !important;
+}
+
+/* Link Volver */
+.back-link {
+  color: #8d6e63;
+  text-decoration: none;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  transition: color 0.3s;
+}
+
+.back-link:hover {
+  color: #4a2e1f;
+  text-decoration: underline;
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 768px) {
+  .login-wrapper {
+    flex-direction: column;
+    max-width: 450px;
+  }
+  
+  .login-decoration {
+    display: none; /* Ocultamos la decoración en móvil */
+  }
+  
+  .login-form-side {
+    padding: 40px 30px;
+  }
+}

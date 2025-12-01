@@ -1,0 +1,99 @@
+<div class="nueva-cita-container fade-in">
+  
+  <div class="header-section mb-4">
+    <button mat-button routerLink="/dashboard/citas" class="back-btn mb-2">
+      <mat-icon>arrow_back</mat-icon> Volver a Citas
+    </button>
+    <h1 class="main-title">AGENDAR NUEVA CITA</h1>
+    <p class="subtitle">Complete los detalles para programar la sesión</p>
+  </div>
+
+  <mat-card class="form-card">
+    <mat-card-content class="p-4">
+      
+      <form [formGroup]="citaForm" (ngSubmit)="onSubmit()">
+        
+        <div class="row">
+          <!-- Cliente -->
+          <div class="col-md-6">
+            <mat-form-field appearance="outline" class="w-100 custom-field">
+              <mat-label>Cliente</mat-label>
+              <mat-select formControlName="id_cliente">
+                <mat-option *ngFor="let cliente of clientes" [value]="cliente.id">
+                  {{cliente.nombre}} {{cliente.apellido}}
+                </mat-option>
+              </mat-select>
+              <mat-error>Requerido</mat-error>
+            </mat-form-field>
+          </div>
+
+          <!-- Artista -->
+          <div class="col-md-6">
+            <mat-form-field appearance="outline" class="w-100 custom-field">
+              <mat-label>Artista</mat-label>
+              <mat-select formControlName="id_artista">
+                <mat-option *ngFor="let artista of artistas" [value]="artista.id">
+                  {{artista.nombre_usuario}} <!-- O el nombre real si tu query lo trae -->
+                </mat-option>
+              </mat-select>
+              <mat-error>Requerido</mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="row">
+          <!-- Fecha -->
+          <div class="col-md-6">
+            <mat-form-field appearance="outline" class="w-100 custom-field">
+              <mat-label>Fecha</mat-label>
+              <input matInput [matDatepicker]="picker" formControlName="fecha">
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+          </div>
+
+          <!-- Hora -->
+          <div class="col-md-6">
+            <mat-form-field appearance="outline" class="w-100 custom-field">
+              <mat-label>Hora (24h)</mat-label>
+              <input matInput type="time" formControlName="hora">
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="row">
+          <!-- Duración -->
+          <div class="col-md-6">
+            <mat-form-field appearance="outline" class="w-100 custom-field">
+              <mat-label>Duración Estimada (min)</mat-label>
+              <input matInput type="number" formControlName="duracion_estimada_minutos">
+            </mat-form-field>
+          </div>
+
+          <!-- Total -->
+          <div class="col-md-6">
+            <mat-form-field appearance="outline" class="w-100 custom-field">
+              <mat-label>Costo Total Estimado ($)</mat-label>
+              <input matInput type="number" formControlName="total_estimado">
+              <mat-icon matPrefix class="me-2">attach_money</mat-icon>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <!-- Notas -->
+        <mat-form-field appearance="outline" class="w-100 custom-field">
+          <mat-label>Notas adicionales</mat-label>
+          <textarea matInput formControlName="notas" rows="3" placeholder="Detalles del diseño, zona del cuerpo, etc."></textarea>
+        </mat-form-field>
+
+        <div class="d-flex justify-content-end mt-3">
+          <button mat-flat-button class="save-btn py-4 px-5" [disabled]="citaForm.invalid || isSubmitting">
+            {{ isSubmitting ? 'GUARDANDO...' : 'CONFIRMAR AGENDAR' }}
+          </button>
+        </div>
+
+      </form>
+
+    </mat-card-content>
+  </mat-card>
+</div>

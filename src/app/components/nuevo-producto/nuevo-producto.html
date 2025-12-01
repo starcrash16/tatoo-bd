@@ -1,0 +1,75 @@
+<div class="nuevo-producto-container fade-in">
+  
+  <div class="header-section mb-4">
+    <button mat-button routerLink="/dashboard/inventario" class="back-btn mb-2">
+      <mat-icon>arrow_back</mat-icon> Volver a Inventario
+    </button>
+    <h1 class="main-title">REGISTRAR MATERIAL</h1>
+    <p class="subtitle">Alta de nuevos suministros para el estudio</p>
+  </div>
+
+  <mat-card class="form-card">
+    <mat-card-content class="p-4">
+      
+      <form [formGroup]="productoForm" (ngSubmit)="onSubmit()">
+        
+        <div class="row">
+          <!-- Nombre del Producto -->
+          <div class="col-md-8">
+            <mat-form-field appearance="outline" class="w-100 custom-field">
+              <mat-label>Nombre del Material / Producto</mat-label>
+              <input matInput formControlName="nombre" placeholder="Ej. Agujas 3RL Caja">
+              <mat-icon matSuffix>inventory_2</mat-icon>
+              <mat-error>Requerido</mat-error>
+            </mat-form-field>
+          </div>
+
+          <!-- Código / SKU -->
+          <div class="col-md-4">
+            <mat-form-field appearance="outline" class="w-100 custom-field">
+              <mat-label>Código (SKU)</mat-label>
+              <input matInput formControlName="codigo" placeholder="Ej. AG-001">
+              <mat-error>Requerido</mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="row">
+          <!-- Cantidad Inicial -->
+          <div class="col-md-4">
+            <mat-form-field appearance="outline" class="w-100 custom-field">
+              <mat-label>Stock Inicial</mat-label>
+              <input matInput type="number" formControlName="cantidad_existencia">
+            </mat-form-field>
+          </div>
+
+          <!-- Nivel de Reorden (Alerta) -->
+          <div class="col-md-4">
+            <mat-form-field appearance="outline" class="w-100 custom-field">
+              <mat-label>Alerta Mínima (Reorden)</mat-label>
+              <input matInput type="number" formControlName="nivel_reorden">
+              <mat-icon matSuffix matTooltip="Cantidad mínima antes de marcar alerta roja">warning</mat-icon>
+            </mat-form-field>
+          </div>
+
+          <!-- Precio Costo -->
+          <div class="col-md-4">
+            <mat-form-field appearance="outline" class="w-100 custom-field">
+              <mat-label>Costo Unitario ($)</mat-label>
+              <input matInput type="number" formControlName="precio_costo">
+              <mat-icon matPrefix class="me-2">attach_money</mat-icon>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-end mt-3">
+          <button mat-flat-button class="save-btn py-4 px-5" [disabled]="productoForm.invalid || isSubmitting">
+            {{ isSubmitting ? 'GUARDANDO...' : 'GUARDAR PRODUCTO' }}
+          </button>
+        </div>
+
+      </form>
+
+    </mat-card-content>
+  </mat-card>
+</div>

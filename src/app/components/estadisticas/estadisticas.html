@@ -5,6 +5,7 @@
     <span class="subtitle">Visión general del estudio</span>
   </div>
 
+  <!-- KPI GRID -->
   <div class="kpi-grid">
     <mat-card class="kpi-card dashboard-card" *ngFor="let kpi of kpis">
       <div class="kpi-content">
@@ -19,12 +20,13 @@
     </mat-card>
   </div>
 
+  <!-- CHARTS GRID -->
   <div class="charts-grid">
-
+    
     <mat-card class="dashboard-card chart-card">
       <div class="card-header-simple">
         <h3>Ingresos Financieros</h3>
-        <span class="text-muted">Últimos 6 meses</span>
+        <span class="text-muted">Tendencia últimos 6 meses</span>
       </div>
       <div class="chart-container">
         <canvas baseChart
@@ -51,24 +53,49 @@
 
   </div>
 
+  <!-- ACTIVIDAD RECIENTE Y ALERTAS -->
   <div class="recent-activity">
     <mat-card class="dashboard-card">
       <div class="card-header-simple mb-2">
-        <h3>Próximas Citas Urgentes</h3>
+        <h3>Actividad & Alertas</h3>
       </div>
       <mat-card-content class="p-0">
         <mat-list>
-          <mat-list-item class="activity-item">
+          
+          <!-- SECCIÓN: PRÓXIMAS CITAS -->
+          <div mat-subheader class="list-subheader">Próximas Citas</div>
+          
+          <mat-list-item class="activity-item" *ngFor="let cita of citasUrgentes">
             <mat-icon matListItemIcon class="activity-icon">event</mat-icon>
-            <div matListItemTitle class="fw-bold">Cliente: Juan Pérez</div>
-            <div matListItemLine>Hoy - 14:00 PM • Tatuaje Brazo</div>
+            <div matListItemTitle class="fw-bold">Cita #{{cita.id}} - ID Cliente: {{cita.id_cliente}}</div>
+            <div matListItemLine>
+              {{cita.fecha_programada | date:'EEE dd MMM - HH:mm'}} • {{cita.estado}}
+            </div>
           </mat-list-item>
+
+          <mat-list-item *ngIf="citasUrgentes.length === 0">
+            <div matListItemTitle class="text-muted fst-italic">No hay citas programadas pronto.</div>
+          </mat-list-item>
+
           <mat-divider></mat-divider>
-          <mat-list-item class="activity-item">
+
+          <!-- SECCIÓN: STOCK BAJO -->
+          <div mat-subheader class="list-subheader text-danger">Alertas de Inventario</div>
+
+          <mat-list-item class="activity-item" *ngFor="let material of materialesBajos">
             <mat-icon matListItemIcon class="activity-icon warning">notifications</mat-icon>
-            <div matListItemTitle class="fw-bold">Inventario Bajo: Agujas 5RL</div>
-            <div matListItemLine class="text-danger">Quedan 2 unidades - Reordenar pronto</div>
+            <div matListItemTitle class="fw-bold">{{material.nombre}}</div>
+            <div matListItemLine class="text-danger">
+              Quedan {{material.cantidad_existencia}} unidades (Mínimo: {{material.nivel_reorden}})
+            </div>
           </mat-list-item>
+
+          <mat-list-item *ngIf="materialesBajos.length === 0">
+            <div matListItemTitle class="text-success fst-italic">
+              <mat-icon class="tiny-icon me-2">check_circle</mat-icon> Inventario saludable.
+            </div>
+          </mat-list-item>
+
         </mat-list>
       </mat-card-content>
     </mat-card>

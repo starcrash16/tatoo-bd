@@ -1,11 +1,15 @@
 import { Routes } from '@angular/router';
 import { Home } from './components/home/home';
+import { Login } from './components/login/login';
 import { Dashboard } from './components/dashboard/dashboard';
 import { Estadisticas } from './components/estadisticas/estadisticas';
 import { Inventario } from './components/inventario/inventario';
+import { NuevoProducto } from './components/nuevo-producto/nuevo-producto';
 import { Clientes } from './components/clientes/clientes';
+import { NuevoCliente } from './components/nuevo-cliente/nuevo-cliente';
 import { MainLayout } from './layout/main-layout/main-layout';
 import { Citas } from './components/citas/citas';
+import { NuevaCita } from './components/nueva-cita/nueva-cita';
 import { Artistas } from './components/artistas/artistas';
 import { Estilos } from './components/estilos/estilos';
 import { Galeria } from './components/galeria/galeria';
@@ -20,7 +24,8 @@ export const routes: Routes = [
       { path: 'artistas', component: Artistas },
       { path: 'estilos', component: Estilos },
       { path: 'galeria', component: Galeria },
-      { path: 'contacto', component: Contacto }
+      { path: 'contacto', component: Contacto },
+      { path: 'login', component: Login }
     ]
   },
 
@@ -29,12 +34,13 @@ export const routes: Routes = [
     component: Dashboard,
     children: [
       { path: '', redirectTo: 'resumen', pathMatch: 'full' },
-      
       { path: 'resumen', component: Estadisticas },
       { path: 'citas', component: Citas },
+      { path: 'citas/nueva', component: NuevaCita },
       { path: 'inventario', component: Inventario },
-      { path: 'clientes', component: Clientes }
-      
+      { path: 'inventario/nuevo', component: NuevoProducto },
+      { path: 'clientes', component: Clientes },
+      { path: 'clientes/nuevo', component: NuevoCliente}
     ]
   },
 

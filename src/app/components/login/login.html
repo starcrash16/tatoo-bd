@@ -1,1 +1,62 @@
-<p>login works!</p>
+<div class="login-container fade-in">
+  
+  <div class="login-wrapper">
+    
+    <!-- Lado Izquierdo: Decorativo / Imagen -->
+    <div class="login-decoration d-none d-md-block">
+      <div class="overlay-texture"></div>
+      <div class="decoration-content">
+        <h1>GANGSTER<br>TATTOO</h1>
+        <p>STUDIO MANAGER</p>
+        <div class="line"></div>
+      </div>
+    </div>
+
+    <!-- Lado Derecho: Formulario -->
+    <div class="login-form-side">
+      <div class="form-header">
+        <h2>ACCESO</h2>
+        <p class="subtitle">Ingresa tus credenciales</p>
+      </div>
+
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        
+        <!-- Usuario / Correo -->
+        <mat-form-field appearance="outline" class="w-100 custom-field mb-2">
+          <mat-label>Usuario o Correo</mat-label>
+          <input matInput formControlName="identificador" placeholder="ej. admin">
+          <mat-icon matSuffix>person</mat-icon>
+          <mat-error *ngIf="loginForm.get('identificador')?.hasError('required')">
+            Campo requerido
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Contraseña -->
+        <mat-form-field appearance="outline" class="w-100 custom-field mb-4">
+          <mat-label>Contraseña</mat-label>
+          <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="contrasena">
+          <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" [attr.aria-label]="'Ocultar contraseña'" type="button">
+            <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
+          <mat-error *ngIf="loginForm.get('contrasena')?.hasError('required')">
+            Campo requerido
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Botón Entrar -->
+        <button mat-flat-button class="login-btn w-100 py-4" [disabled]="loginForm.invalid || isLoading">
+          <span *ngIf="!isLoading">INGRESAR AL SISTEMA</span>
+          <mat-spinner *ngIf="isLoading" diameter="24" color="accent"></mat-spinner>
+        </button>
+
+        <!-- Link Volver -->
+        <div class="text-center mt-4">
+          <a routerLink="/" class="back-link">← Volver al inicio</a>
+        </div>
+
+      </form>
+    </div>
+
+  </div>
+
+</div>

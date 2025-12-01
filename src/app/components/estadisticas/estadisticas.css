@@ -1,3 +1,27 @@
+/* ... (Mismo código CSS anterior) ... */
+
+/* --- NUEVO: Estilo para separadores de lista --- */
+.list-subheader {
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  color: #6d4c41;
+  background-color: transparent;
+  height: 40px !important;
+  line-height: 40px !important;
+}
+
+.text-success {
+  color: #2e7d32 !important;
+}
+
+.tiny-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+  vertical-align: middle;
+}
+
+/* ... (Resto del CSS se mantiene igual) ... */
 .stats-container {
   max-width: 1400px;
   margin: 0 auto;
