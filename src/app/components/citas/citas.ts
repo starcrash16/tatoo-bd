@@ -38,6 +38,8 @@ export class Citas implements OnInit {
   
   displayedColumns: string[] = ['id', 'fecha', 'cliente', 'artista', 'estado', 'total', 'acciones'];
   dataSource = new MatTableDataSource<any>([]);
+  clientes: any[] = [];
+  artistas: any[] = [];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -47,6 +49,12 @@ export class Citas implements OnInit {
 
   ngOnInit() {
     this.cargarCitas();
+    this.cargarCatalogos();
+  }
+
+  cargarCatalogos() {
+    this.citasService.getClientes().subscribe(data => this.clientes = data);
+    this.citasService.getArtistas().subscribe(data => this.artistas = data);
   }
 
   cargarCitas() {
@@ -70,5 +78,30 @@ export class Citas implements OnInit {
   irANuevaCita() {
     // Navega a la ruta hija 'nueva' dentro de dashboard/citas
     this.router.navigate(['/dashboard/citas/nueva']);
+  }
+
+  // 5. FUNCIÓN PARA ELIMINAR CITA
+  eliminarCita(cita: any) {
+    if (confirm(`¿Estás seguro de eliminar la cita #${cita.id}?`)) {
+      this.citasService.eliminarCita(cita.id).subscribe({
+        next: () => {
+          console.log('Cita eliminada correctamente');
+          this.cargarCitas(); // Recargar la tabla
+        },
+        error: (err) => console.error('Error eliminando cita:', err)
+      });
+    }
+  }
+
+  // 6. OBTENER NOMBRE COMPLETO DEL CLIENTE
+  getNombreCliente(idCliente: string): string {
+    const cliente = this.clientes.find(c => c.id === idCliente);
+    return cliente ? `${cliente.nombre} ${cliente.apellido}` : 'Desconocido';
+  }
+
+  // 7. OBTENER NOMBRE DEL ARTISTA
+  getNombreArtista(idArtista: string): string {
+    const artista = this.artistas.find(a => a.id === idArtista);
+    return artista ? artista.nombre_usuario : 'Desconocido';
   }
 }

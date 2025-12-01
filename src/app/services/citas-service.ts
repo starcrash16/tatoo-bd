@@ -15,8 +15,20 @@ export class CitasService {
     return this.http.get<any[]>(`${this.apiUrl}/citas`);
   }
 
+  getCitaById(id: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/citas/${id}`);
+  }
+
   generarCita(cita: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/citas/generar`, cita);
+  }
+
+  eliminarCita(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/citas/${id}`);
+  }
+
+  editarCita(id: number, cita: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/citas/${id}`, cita);
   }
 
   // --- CATALOGOS (Para llenar los select del formulario) ---

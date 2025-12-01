@@ -6,8 +6,13 @@
   font-weight: 700;
   color: #6d4c41;
   background-color: transparent;
-  height: 40px !important;
-  line-height: 40px !important;
+  height: auto !important;
+  padding-top: 8px !important;
+  padding-bottom: 4px !important;
+  padding-left: 16px !important;
+  padding-right: 16px !important;
+  margin-bottom: 0 !important;
+  font-size: 0.875rem;
 }
 
 .text-success {
@@ -80,6 +85,11 @@
   font-size: 1.1rem;
 }
 
+.card-header-simple.mb-2 {
+  margin-bottom: 0.15rem !important;
+  padding-bottom: 0.15rem !important;
+}
+
 .text-muted {
   color: #8d6e63;
   font-size: 0.85rem;
@@ -142,20 +152,26 @@
 
 .activity-item {
   height: auto !important;
-  padding: 15px 0 !important;
+  padding: 10px 16px !important;
+  min-height: 56px !important;
+}
+
+.activity-item .mat-list-item-content {
+  padding: 0 !important;
 }
 
 .activity-icon {
   background-color: rgba(63, 81, 181, 0.1);
   color: #3f51b5;
-  padding: 8px;
+  padding: 6px;
   border-radius: 50%;
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-right: 1rem;
+  margin-right: 12px;
+  font-size: 20px;
 }
 
 .activity-icon.warning {
@@ -165,6 +181,18 @@
 
 .fw-bold { font-weight: 600 !important; color: #3e2723; }
 .text-danger { color: #c62828 !important; font-weight: 500; }
+
+.p-0 {
+  padding: 0 !important;
+}
+
+mat-card-content.p-0 mat-list {
+  padding-top: 0 !important;
+}
+
+mat-divider {
+  margin: 8px 16px !important;
+}
 
 @media (max-width: 992px) {
   .charts-grid {

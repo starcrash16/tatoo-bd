@@ -64,7 +64,6 @@
           
           <!-- SECCIÓN: PRÓXIMAS CITAS -->
           <div mat-subheader class="list-subheader">Próximas Citas</div>
-          
           <mat-list-item class="activity-item" *ngFor="let cita of citasUrgentes">
             <mat-icon matListItemIcon class="activity-icon">event</mat-icon>
             <div matListItemTitle class="fw-bold">Cita #{{cita.id}} - ID Cliente: {{cita.id_cliente}}</div>
@@ -81,7 +80,6 @@
 
           <!-- SECCIÓN: STOCK BAJO -->
           <div mat-subheader class="list-subheader text-danger">Alertas de Inventario</div>
-
           <mat-list-item class="activity-item" *ngFor="let material of materialesBajos">
             <mat-icon matListItemIcon class="activity-icon warning">notifications</mat-icon>
             <div matListItemTitle class="fw-bold">{{material.nombre}}</div>

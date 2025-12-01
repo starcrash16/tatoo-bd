@@ -4,8 +4,8 @@
     <button mat-button routerLink="/dashboard/citas" class="back-btn mb-2">
       <mat-icon>arrow_back</mat-icon> Volver a Citas
     </button>
-    <h1 class="main-title">AGENDAR NUEVA CITA</h1>
-    <p class="subtitle">Complete los detalles para programar la sesión</p>
+    <h1 class="main-title">{{ isEditMode ? 'EDITAR CITA' : 'AGENDAR NUEVA CITA' }}</h1>
+    <p class="subtitle">{{ isEditMode ? 'Modifique los detalles de la sesión' : 'Complete los detalles para programar la sesión' }}</p>
   </div>
 
   <mat-card class="form-card">
@@ -88,7 +88,7 @@
 
         <div class="d-flex justify-content-end mt-3">
           <button mat-flat-button class="save-btn py-4 px-5" [disabled]="citaForm.invalid || isSubmitting">
-            {{ isSubmitting ? 'GUARDANDO...' : 'CONFIRMAR AGENDAR' }}
+            {{ isSubmitting ? 'GUARDANDO...' : (isEditMode ? 'ACTUALIZAR CITA' : 'CONFIRMAR AGENDAR') }}
           </button>
         </div>
 

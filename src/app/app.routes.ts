@@ -37,6 +37,7 @@ export const routes: Routes = [
       { path: 'resumen', component: Estadisticas },
       { path: 'citas', component: Citas },
       { path: 'citas/nueva', component: NuevaCita },
+      { path: 'citas/editar/:id', component: NuevaCita },
       { path: 'inventario', component: Inventario },
       { path: 'inventario/nuevo', component: NuevoProducto },
       { path: 'clientes', component: Clientes },

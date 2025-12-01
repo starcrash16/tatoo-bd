@@ -53,14 +53,23 @@
           <!-- Columna Cliente -->
           <ng-container matColumnDef="cliente">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Cliente </th>
-            <!-- Mostramos ID o Nombre si el backend hiciera JOIN -->
-            <td mat-cell *matCellDef="let row"> ID: {{row.id_cliente}} </td>
+            <td mat-cell *matCellDef="let row">
+              <div class="d-flex flex-column">
+                <span class="fw-bold">{{getNombreCliente(row.id_cliente)}}</span>
+                <small class="text-muted">ID: {{row.id_cliente}}</small>
+              </div>
+            </td>
           </ng-container>
 
           <!-- Columna Artista -->
           <ng-container matColumnDef="artista">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Artista </th>
-            <td mat-cell *matCellDef="let row"> ID: {{row.id_artista}} </td>
+            <td mat-cell *matCellDef="let row">
+              <div class="d-flex flex-column">
+                <span class="fw-bold">{{getNombreArtista(row.id_artista)}}</span>
+                <small class="text-muted">ID: {{row.id_artista}}</small>
+              </div>
+            </td>
           </ng-container>
 
           <!-- Columna Estado -->
@@ -84,8 +93,11 @@
            <ng-container matColumnDef="acciones">
             <th mat-header-cell *matHeaderCellDef> Acciones </th>
             <td mat-cell *matCellDef="let row">
-              <button mat-icon-button class="action-btn" matTooltip="Editar / Ver Detalles">
+              <button mat-icon-button class="action-btn" matTooltip="Editar / Ver Detalles" [routerLink]="['/dashboard/citas/editar', row.id]">
                 <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button class="action-btn" matTooltip="Eliminar Cita" (click)="eliminarCita(row)">
+                <mat-icon>delete</mat-icon>
               </button>
             </td>
           </ng-container>
