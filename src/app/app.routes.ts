@@ -7,6 +7,7 @@ import { Inventario } from './components/inventario/inventario';
 import { NuevoProducto } from './components/nuevo-producto/nuevo-producto';
 import { Clientes } from './components/clientes/clientes';
 import { NuevoCliente } from './components/nuevo-cliente/nuevo-cliente';
+import { ExpedienteMedico } from './components/expediente-medico/expediente-medico';
 import { MainLayout } from './layout/main-layout/main-layout';
 import { Citas } from './components/citas/citas';
 import { NuevaCita } from './components/nueva-cita/nueva-cita';
@@ -42,7 +43,9 @@ export const routes: Routes = [
       { path: 'inventario/nuevo', component: NuevoProducto },
       { path: 'inventario/editar/:id', component: NuevoProducto },
       { path: 'clientes', component: Clientes },
-      { path: 'clientes/nuevo', component: NuevoCliente}
+      { path: 'clientes/nuevo', component: NuevoCliente},
+      { path: 'clientes/editar/:id', component: NuevoCliente},
+      { path: 'clientes/expediente/:id', component: ExpedienteMedico}
     ]
   },
 

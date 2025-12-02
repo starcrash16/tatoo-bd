@@ -1,0 +1,370 @@
+/* ===== CONTAINER ===== */
+.expediente-container {
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  animation: fadeIn 0.5s ease-out;
+  color: #4a2e1f;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== SECTION HEADER ===== */
+.section-header {
+  margin-bottom: 2rem;
+  border-left: 5px solid #4a2e1f;
+  padding-left: 1.5rem;
+}
+
+.section-header h1 {
+  font-family: 'Anton', sans-serif;
+  color: #4a2e1f !important;
+  font-size: 2.5rem;
+  margin-bottom: 0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.section-header .subtitle {
+  font-family: 'Inter', sans-serif;
+  color: #6d4c41 !important;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+/* ===== BACK BUTTON ===== */
+.back-btn {
+  background-color: #4a2e1f !important;
+  color: #f3d2b2 !important;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  letter-spacing: 1px;
+  border-radius: 8px !important;
+  padding: 0 24px !important;
+  height: 48px !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 4px 12px rgba(74, 46, 31, 0.25);
+}
+
+.back-btn:hover {
+  background-color: #2b1a10 !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(74, 46, 31, 0.35);
+}
+
+.back-btn mat-icon {
+  margin-right: 8px;
+}
+
+/* ===== LOADING & ERROR ===== */
+.loading-icon,
+.error-icon {
+  font-size: 64px;
+  width: 64px;
+  height: 64px;
+  color: #8d6e63;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* ===== PROFILE CARD (Columna Izquierda) ===== */
+.profile-card {
+  background-color: #fdf5eb !important;
+  border-radius: 16px !important;
+  box-shadow: 0 4px 20px rgba(74, 46, 31, 0.08) !important;
+  border: 1px solid rgba(74, 46, 31, 0.1) !important;
+  padding: 2rem;
+  height: 100%;
+}
+
+.avatar-large {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background-color: #4a2e1f;
+  color: #f3d2b2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 0 auto;
+  box-shadow: 0 8px 24px rgba(74, 46, 31, 0.3);
+  border: 3px solid #8d6e63;
+}
+
+.client-name {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #2b1a10;
+  margin-bottom: 0.25rem;
+  font-family: 'Anton', sans-serif;
+}
+
+.client-id {
+  font-size: 0.9rem;
+  color: #8d6e63;
+  margin-bottom: 0;
+}
+
+/* ===== INFO SECTION ===== */
+.info-section {
+  margin-top: 1.5rem;
+}
+
+.section-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #4a2e1f;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 1rem;
+  font-family: 'Inter', sans-serif;
+}
+
+.section-title mat-icon {
+  color: #8d6e63;
+}
+
+.info-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(74, 46, 31, 0.1);
+}
+
+.info-row:last-child {
+  border-bottom: none;
+}
+
+.info-icon {
+  color: #8d6e63;
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  margin-top: 2px;
+}
+
+.info-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.info-label {
+  font-size: 0.85rem;
+  color: #8d6e63;
+  font-weight: 500;
+}
+
+.info-value {
+  font-size: 0.95rem;
+  color: #2b1a10;
+  font-weight: 600;
+}
+
+.info-badge {
+  display: inline-block;
+  background-color: #e8f5e9;
+  color: #2e7d32;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  width: fit-content;
+  margin-top: 4px;
+  border: 1px solid #81c784;
+}
+
+/* ===== MEDICAL CARDS (Columna Derecha) ===== */
+.medical-card {
+  background-color: #fdf5eb !important;
+  border-radius: 16px !important;
+  box-shadow: 0 4px 20px rgba(74, 46, 31, 0.08) !important;
+  border: 1px solid rgba(74, 46, 31, 0.1) !important;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.medical-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(74, 46, 31, 0.15) !important;
+}
+
+.card-header-content {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.header-icon-wrapper {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+}
+
+.header-icon-wrapper.allergies {
+  background: linear-gradient(135deg, #d32f2f 0%, #c62828 100%);
+  box-shadow: 0 4px 12px rgba(211, 47, 47, 0.3);
+}
+
+.header-icon-wrapper.notes {
+  background: linear-gradient(135deg, #6d4c41 0%, #4a2e1f 100%);
+  box-shadow: 0 4px 12px rgba(74, 46, 31, 0.3);
+}
+
+.header-icon-wrapper mat-icon {
+  font-size: 28px;
+  width: 28px;
+  height: 28px;
+}
+
+::ng-deep .medical-card .mat-mdc-card-header {
+  padding: 1.5rem 1.5rem 1rem 1.5rem;
+}
+
+::ng-deep .medical-card .mat-mdc-card-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #2b1a10;
+  margin-bottom: 4px;
+  font-family: 'Inter', sans-serif;
+}
+
+::ng-deep .medical-card .mat-mdc-card-subtitle {
+  font-size: 0.9rem;
+  color: #8d6e63;
+  font-family: 'Inter', sans-serif;
+}
+
+/* ===== MEDICAL INFO BOX ===== */
+.medical-info-box {
+  background-color: #ffffff;
+  border-left: 4px solid #6d4c41;
+  border-radius: 8px;
+  padding: 1.5rem;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.medical-info-box.empty {
+  border-left-color: #2e7d32;
+  background-color: #e8f5e9;
+}
+
+.box-icon {
+  font-size: 32px;
+  width: 32px;
+  height: 32px;
+  color: #6d4c41;
+  flex-shrink: 0;
+}
+
+.medical-info-box.empty .box-icon {
+  color: #2e7d32;
+}
+
+.box-content {
+  flex: 1;
+}
+
+.medical-text {
+  font-size: 1rem;
+  color: #3e2723;
+  line-height: 1.6;
+  margin: 0;
+  white-space: pre-wrap;
+  font-family: 'Inter', sans-serif;
+}
+
+.empty-text {
+  font-size: 1rem;
+  color: #2e7d32;
+  font-weight: 500;
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+}
+
+/* ===== ACTION CARD ===== */
+.action-card {
+  background: linear-gradient(135deg, #4a2e1f 0%, #2b1a10 100%);
+  border-radius: 16px;
+  color: #ffffff;
+  box-shadow: 0 4px 20px rgba(74, 46, 31, 0.3);
+}
+
+.action-card .mat-mdc-card-content {
+  padding: 1.5rem;
+}
+
+.info-large-icon {
+  font-size: 40px;
+  width: 40px;
+  height: 40px;
+  color: #f3d2b2;
+}
+
+.action-card p {
+  color: #f3d2b2;
+  font-family: 'Inter', sans-serif;
+}
+
+.action-card small {
+  color: rgba(243, 210, 178, 0.8);
+}
+
+.action-card button {
+  background-color: #f3d2b2 !important;
+  color: #4a2e1f !important;
+  border: none !important;
+  font-weight: 600 !important;
+  font-family: 'Inter', sans-serif;
+}
+
+.action-card button:hover {
+  background-color: #ffffff !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 991px) {
+  .expediente-container {
+    padding: 1rem;
+  }
+
+  .section-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .back-btn {
+    width: 100%;
+    margin-top: 1rem;
+  }
+
+  .avatar-large {
+    width: 100px;
+    height: 100px;
+    font-size: 2rem;
+  }
+
+  .client-name {
+    font-size: 1.25rem;
+  }
+}

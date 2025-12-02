@@ -1,0 +1,153 @@
+<div class="expediente-container">
+
+  <!-- Header con botón volver -->
+  <div class="section-header mb-4">
+    <div class="d-flex justify-content-between align-items-center">
+      <div>
+        <h1>Expediente Médico</h1>
+        <span class="subtitle">Información completa del cliente</span>
+      </div>
+      <button mat-flat-button class="back-btn" (click)="volver()">
+        <mat-icon>arrow_back</mat-icon> VOLVER A CLIENTES
+      </button>
+    </div>
+  </div>
+
+  <!-- Mensaje de carga -->
+  <div *ngIf="cargando" class="text-center py-5">
+    <mat-icon class="loading-icon">hourglass_empty</mat-icon>
+    <p class="mt-3">Cargando expediente...</p>
+  </div>
+
+  <!-- Contenido del expediente -->
+  <div *ngIf="!cargando && cliente" class="row">
+    
+    <!-- Columna Izquierda: Información Personal -->
+    <div class="col-lg-4 mb-4">
+      <mat-card class="profile-card">
+        <mat-card-content>
+          <!-- Avatar grande con iniciales -->
+          <div class="text-center mb-4">
+            <div class="avatar-large">
+              {{ getIniciales(cliente.nombre, cliente.apellido) }}
+            </div>
+            <h2 class="client-name mt-3">{{ cliente.nombre }} {{ cliente.apellido }}</h2>
+            <p class="client-id text-muted">ID: {{ cliente.id }}</p>
+          </div>
+
+          <mat-divider class="my-3"></mat-divider>
+
+          <!-- Datos personales -->
+          <div class="info-section">
+            <h3 class="section-title">
+              <mat-icon>person</mat-icon> Datos Personales
+            </h3>
+            
+            <div class="info-row">
+              <mat-icon class="info-icon">cake</mat-icon>
+              <div class="info-content">
+                <span class="info-label">Fecha de Nacimiento</span>
+                <span class="info-value">{{ cliente.fecha_nacimiento | date:'dd/MM/yyyy' }}</span>
+                <span class="info-badge">{{ calcularEdad(cliente.fecha_nacimiento) }} años</span>
+              </div>
+            </div>
+
+            <div class="info-row">
+              <mat-icon class="info-icon">email</mat-icon>
+              <div class="info-content">
+                <span class="info-label">Correo Electrónico</span>
+                <span class="info-value">{{ cliente.correo }}</span>
+              </div>
+            </div>
+
+            <div class="info-row">
+              <mat-icon class="info-icon">phone</mat-icon>
+              <div class="info-content">
+                <span class="info-label">Teléfono</span>
+                <span class="info-value">{{ cliente.telefono || 'No registrado' }}</span>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- Columna Derecha: Información Médica -->
+    <div class="col-lg-8 mb-4">
+      
+      <!-- Card Alergias -->
+      <mat-card class="medical-card mb-4">
+        <mat-card-header>
+          <div class="card-header-content">
+            <div class="header-icon-wrapper allergies">
+              <mat-icon>warning</mat-icon>
+            </div>
+            <div>
+              <mat-card-title>Alergias</mat-card-title>
+              <mat-card-subtitle>Historial de reacciones alérgicas</mat-card-subtitle>
+            </div>
+          </div>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="medical-info-box" [class.empty]="!cliente.alergias || (cliente.alergias && cliente.alergias.trim() === '')">
+            <mat-icon class="box-icon">{{ (cliente.alergias && cliente.alergias.trim() !== '') ? 'emergency' : 'check_circle' }}</mat-icon>
+            <div class="box-content">
+              <p *ngIf="cliente.alergias && cliente.alergias.trim() !== ''" class="medical-text">{{ cliente.alergias }}</p>
+              <p *ngIf="!cliente.alergias || (cliente.alergias && cliente.alergias.trim() === '')" class="empty-text">No se reportan alergias conocidas</p>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Card Notas Médicas -->
+      <mat-card class="medical-card">
+        <mat-card-header>
+          <div class="card-header-content">
+            <div class="header-icon-wrapper notes">
+              <mat-icon>description</mat-icon>
+            </div>
+            <div>
+              <mat-card-title>Notas Médicas</mat-card-title>
+              <mat-card-subtitle>Observaciones y condiciones médicas relevantes</mat-card-subtitle>
+            </div>
+          </div>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="medical-info-box" [class.empty]="!cliente.notas_medicas || (cliente.notas_medicas && cliente.notas_medicas.trim() === '')">
+            <mat-icon class="box-icon">{{ (cliente.notas_medicas && cliente.notas_medicas.trim() !== '') ? 'description' : 'note_add' }}</mat-icon>
+            <div class="box-content">
+              <p *ngIf="cliente.notas_medicas && cliente.notas_medicas.trim() !== ''" class="medical-text">{{ cliente.notas_medicas }}</p>
+              <p *ngIf="!cliente.notas_medicas || (cliente.notas_medicas && cliente.notas_medicas.trim() === '')" class="empty-text">No hay notas médicas registradas</p>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Card información adicional / acciones futuras -->
+      <mat-card class="action-card mt-4">
+        <mat-card-content>
+          <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center gap-3">
+              <mat-icon class="info-large-icon">info</mat-icon>
+              <div>
+                <p class="mb-0 fw-bold">Información confidencial</p>
+                <small class="text-muted">Este expediente contiene datos médicos sensibles</small>
+              </div>
+            </div>
+            <button mat-stroked-button color="primary">
+              <mat-icon>edit</mat-icon> EDITAR EXPEDIENTE
+            </button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+  </div>
+
+  <!-- Mensaje de error -->
+  <div *ngIf="!cargando && !cliente" class="text-center py-5">
+    <mat-icon class="error-icon">error_outline</mat-icon>
+    <p class="mt-3">No se pudo cargar el expediente del cliente</p>
+  </div>
+
+</div>

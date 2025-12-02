@@ -24,4 +24,14 @@ export class ClientesService {
   crearCliente(cliente: any): Observable<any> {
     return this.http.post(this.apiUrl, cliente);
   }
+
+  //Eliminar cliente existente
+  eliminarCliente(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/${id}`);
+  }
+
+  //Editar cliente existente
+  editarCliente(id: number, cliente: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${id}`, cliente);
+  }
 }

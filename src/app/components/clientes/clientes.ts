@@ -101,4 +101,24 @@ export class Clientes implements OnInit, AfterViewInit {
   irANuevoCliente() {
     this.router.navigate(['/dashboard/clientes/nuevo']);
   }
+
+  // 4. ELIMINAR CLIENTE
+  eliminarCliente(cliente: ClienteElement) {
+    const confirmar = confirm(
+      `¿Está seguro de que desea eliminar al cliente ${cliente.nombre} ${cliente.apellido}?\n\nEsta acción no se puede deshacer.`
+    );
+
+    if (confirmar) {
+      this.clientesService.eliminarCliente(cliente.id).subscribe({
+        next: () => {
+          console.log('Cliente eliminado exitosamente');
+          this.cargarClientes(); // Recargar la tabla
+        },
+        error: (err) => {
+          console.error('Error eliminando cliente:', err);
+          alert('Error al eliminar el cliente. Por favor, intente nuevamente.');
+        }
+      });
+    }
+  }
 }

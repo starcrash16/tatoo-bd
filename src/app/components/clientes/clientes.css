@@ -44,6 +44,10 @@
 }
 
 /* --- FORMULARIOS & INPUTS --- */
+::ng-deep .custom-form-field {
+  height: 56px;
+}
+
 ::ng-deep .custom-form-field .mat-mdc-text-field-wrapper {
   background-color: #ffffff !important;
   border-radius: 8px;
@@ -174,7 +178,20 @@ tr.mat-mdc-row:hover {
 
 /* Botones de Acción */
 .action-btn { color: #5d4037 !important; }
-.edit-btn { color: #1976d2 !important; }
+.edit-btn { color: #6d4c41 !important;}
+.delete-btn { 
+  color: #6d4c41 !important;
+  transition: all 0.2s ease;
+}
+
+.delete-btn:hover {
+  background-color: rgba(198, 40, 40, 0.08) !important;
+  transform: scale(1.1);
+}
+
+.delete-btn:active {
+  transform: scale(0.95);
+}
 
 /* Paginador */
 ::ng-deep .mat-mdc-paginator {
