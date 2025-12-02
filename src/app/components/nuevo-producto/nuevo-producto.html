@@ -4,8 +4,8 @@
     <button mat-button routerLink="/dashboard/inventario" class="back-btn mb-2">
       <mat-icon>arrow_back</mat-icon> Volver a Inventario
     </button>
-    <h1 class="main-title">REGISTRAR MATERIAL</h1>
-    <p class="subtitle">Alta de nuevos suministros para el estudio</p>
+    <h1 class="main-title">{{ isEditMode ? 'EDITAR MATERIAL' : 'REGISTRAR MATERIAL' }}</h1>
+    <p class="subtitle">{{ isEditMode ? 'Modificar información del suministro' : 'Alta de nuevos suministros para el estudio' }}</p>
   </div>
 
   <mat-card class="form-card">
@@ -64,7 +64,7 @@
 
         <div class="d-flex justify-content-end mt-3">
           <button mat-flat-button class="save-btn py-4 px-5" [disabled]="productoForm.invalid || isSubmitting">
-            {{ isSubmitting ? 'GUARDANDO...' : 'GUARDAR PRODUCTO' }}
+            {{ isSubmitting ? 'GUARDANDO...' : (isEditMode ? 'ACTUALIZAR MATERIAL' : 'GUARDAR PRODUCTO') }}
           </button>
         </div>
 

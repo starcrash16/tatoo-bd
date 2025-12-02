@@ -75,7 +75,8 @@ export class Inventario implements OnInit, AfterViewInit {
   cargarInventario() {
     this.inventarioService.getMateriales().subscribe({
       next: (data) => {
-        this.dataSource.data = data;
+        // Filtrar solo los materiales activos
+        this.dataSource.data = data.filter(m => m.activo);
         
         // Configurar filtro personalizado para buscar por varias propiedades
         this.dataSource.filterPredicate = (data: ProductoElement, filter: string) => {
@@ -121,5 +122,18 @@ export class Inventario implements OnInit, AfterViewInit {
     if (cantidad === 0) return 'Agotado';
     if (cantidad <= reorden) return 'Bajo Stock';
     return 'Disponible';
+  }
+
+  // Eliminar material (dar de baja - cambia activo a false)
+  eliminarMaterial(material: any) {
+    if (confirm(`¿Estás seguro de dar de baja el material "${material.nombre}"?`)) {
+      this.inventarioService.eliminarMaterial(material.id).subscribe({
+        next: () => {
+          console.log('Material eliminado correctamente');
+          this.cargarInventario(); // Recargar la tabla
+        },
+        error: (err) => console.error('Error eliminando material:', err)
+      });
+    }
   }
 }

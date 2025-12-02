@@ -19,4 +19,19 @@ export class InventarioService {
   crearMaterial(material: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/materiales`, material);
   }
+
+  // Editar material existente (Necesitarás agregar el PUT en tu backend)
+  editarMaterial(id: number, material: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/materiales/${id}`, material);
+  }
+
+  // Eliminar material (Necesitarás agregar el DELETE en tu backend)
+  eliminarMaterial(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/materiales/${id}`);
+  }
+
+  //Buscar un material por ID
+  getMaterialById(id: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/materiales/${id}`);
+  }
 }

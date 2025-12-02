@@ -40,6 +40,7 @@ export const routes: Routes = [
       { path: 'citas/editar/:id', component: NuevaCita },
       { path: 'inventario', component: Inventario },
       { path: 'inventario/nuevo', component: NuevoProducto },
+      { path: 'inventario/editar/:id', component: NuevoProducto },
       { path: 'clientes', component: Clientes },
       { path: 'clientes/nuevo', component: NuevoCliente}
     ]
