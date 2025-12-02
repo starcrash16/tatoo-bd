@@ -2,6 +2,9 @@
   
   <!-- TOOLBAR SUPERIOR -->
   <mat-toolbar class="main-toolbar">
+    <button mat-icon-button (click)="snav.toggle()" class="menu-btn">
+      <mat-icon>menu</mat-icon>
+    </button>
     
     <span class="toolbar-title">TATTOO STUDIO MANAGER</span>
     
@@ -49,6 +52,12 @@
         <a mat-list-item routerLink="/dashboard/clientes" routerLinkActive="active-link" class="nav-item">
           <mat-icon matListItemIcon>people</mat-icon>
           <span matListItemTitle>Clientes VIP</span>
+        </a>
+
+        <!-- NUEVO ITEM: REPORTES -->
+        <a mat-list-item routerLink="/dashboard/reportes" routerLinkActive="active-link" class="nav-item">
+          <mat-icon matListItemIcon>description</mat-icon>
+          <span matListItemTitle>Reportes PDF</span>
         </a>
 
         <mat-divider class="my-3 opacity-25 bg-white"></mat-divider>

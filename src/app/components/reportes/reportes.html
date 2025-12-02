@@ -1,0 +1,87 @@
+<div class="reportes-container fade-in">
+  
+  <div class="header-section mb-4">
+    <h1 class="main-title">GENERAR REPORTE</h1>
+    <p class="subtitle">Documentación de sesión y consumo de materiales</p>
+  </div>
+
+  <mat-card class="form-card">
+    <mat-card-content class="p-4">
+      
+      <form [formGroup]="reporteForm" (ngSubmit)="generarPDF()">
+        
+        <!-- SELECCIÓN DE CITA -->
+        <h3 class="section-divider">Datos de la Sesión</h3>
+        
+        <div class="row">
+          <div class="col-md-8">
+            <mat-form-field appearance="outline" class="w-100 custom-field">
+              <mat-label>Seleccionar Cita</mat-label>
+              <mat-select formControlName="id_cita">
+                <mat-option *ngFor="let cita of listaCitas" [value]="cita.id">
+                  Cita #{{cita.id}} - {{cita.fecha_programada | date:'shortDate'}} ({{cita.estado}})
+                </mat-option>
+              </mat-select>
+              <mat-error>Requerido para llenar datos</mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="col-md-4">
+            <mat-form-field appearance="outline" class="w-100 custom-field">
+              <mat-label>Fecha del Reporte</mat-label>
+              <input matInput [matDatepicker]="picker" formControlName="fecha_reporte">
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <!-- DATOS AUTOCOMPLETADOS (READONLY) -->
+        <div class="row">
+          <div class="col-md-6">
+            <mat-form-field appearance="outline" class="w-100 custom-field readonly-field">
+              <mat-label>Cliente</mat-label>
+              <input matInput formControlName="cliente_nombre">
+              <mat-icon matSuffix>person</mat-icon>
+            </mat-form-field>
+          </div>
+          <div class="col-md-6">
+            <mat-form-field appearance="outline" class="w-100 custom-field readonly-field">
+              <mat-label>Artista</mat-label>
+              <input matInput formControlName="artista_nombre">
+              <mat-icon matSuffix>brush</mat-icon>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <!-- SELECCIÓN DE MATERIALES -->
+        <h3 class="section-divider mt-3">Consumo de Inventario</h3>
+        
+        <mat-form-field appearance="outline" class="w-100 custom-field">
+          <mat-label>Materiales Utilizados (Selección Múltiple)</mat-label>
+          <mat-select formControlName="materiales_usados" multiple>
+            <mat-option *ngFor="let material of listaMateriales" [value]="material.id">
+              {{material.nombre}} (Disp: {{material.cantidad_existencia}})
+            </mat-option>
+          </mat-select>
+          <mat-icon matSuffix>inventory_2</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-100 custom-field">
+          <mat-label>Observaciones / Notas de la Sesión</mat-label>
+          <textarea matInput formControlName="observaciones" rows="3" placeholder="Reacciones de piel, cambios en diseño, etc."></textarea>
+        </mat-form-field>
+
+        <!-- BOTÓN GENERAR -->
+        <div class="d-flex justify-content-end mt-4">
+          <button mat-flat-button class="pdf-btn py-4 px-5" [disabled]="reporteForm.invalid || isGenerating">
+            <mat-icon class="me-2">picture_as_pdf</mat-icon>
+            {{ isGenerating ? 'GENERANDO...' : 'DESCARGAR PDF' }}
+          </button>
+        </div>
+
+      </form>
+
+    </mat-card-content>
+  </mat-card>
+</div>
