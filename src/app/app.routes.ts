@@ -18,6 +18,7 @@ import { Galeria } from './components/galeria/galeria';
 import { Contacto } from './components/contacto/contacto';
 import { Reportes } from './components/reportes/reportes';
 import { SesionesComponent } from './components/sesiones/sesiones';
+import { ArtistasDashboard } from './components/artistas-dashboard/artistas-dashboard';
 
 export const routes: Routes = [
   {
@@ -51,7 +52,8 @@ export const routes: Routes = [
       { path: 'clientes/editar/:id', component: NuevoCliente},
       { path: 'clientes/expediente/:id', component: ExpedienteMedico},
       { path: 'sesiones', component: SesionesComponent },
-      { path: 'reportes', component: Reportes }
+      { path: 'reportes', component: Reportes },
+      { path: 'artistas', component: ArtistasDashboard }
     ]
   },
 
