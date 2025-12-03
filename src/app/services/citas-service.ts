@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -43,4 +43,18 @@ export class CitasService {
   getArtistas(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/artistas`);
   }
+
+  // En CitasService (o SesionesService si lo creaste aparte)
+
+// Método para buscar sesiones con filtros
+buscarSesiones(filtros: any): Observable<any[]> {
+  // Construimos los query params dinámicamente
+  let params = new HttpParams();
+  if (filtros.id_cita) params = params.set('id_cita', filtros.id_cita);
+  if (filtros.estado) params = params.set('estado', filtros.estado);
+  if (filtros.id_artista) params = params.set('id_artista', filtros.id_artista);
+  if (filtros.id_cliente) params = params.set('id_cliente', filtros.id_cliente);
+
+  return this.http.get<any[]>(`${this.apiUrl}/sesiones/busqueda`, { params });
+}
 }

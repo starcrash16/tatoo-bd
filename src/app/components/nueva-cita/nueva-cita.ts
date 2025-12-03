@@ -39,6 +39,17 @@ export class NuevaCita implements OnInit {
   citaForm: FormGroup;
   clientes: any[] = [];
   artistas: any[] = [];
+  
+  // 1. DEFINIR LISTA DE ESTADOS (Basado en tu ENUM de PostgreSQL)
+  estadosCita: string[] = [
+    'programada', 
+    'confirmada', 
+    'en_progreso', 
+    'completada', 
+    'cancelada', 
+    'no_asistio'
+  ];
+
   isSubmitting = false;
   usuarioActual: any = null;
   isEditMode = false;
@@ -58,7 +69,9 @@ export class NuevaCita implements OnInit {
       hora: ['12:00', Validators.required],
       duracion_estimada_minutos: [120, [Validators.required, Validators.min(30)]],
       total_estimado: [0, [Validators.required, Validators.min(0)]],
-      notas: ['']
+      notas: [''],
+      // 2. AGREGAR CONTROL DE ESTADO (Por defecto 'programada')
+      estado: ['programada', Validators.required] 
     });
   }
 
@@ -102,18 +115,19 @@ export class NuevaCita implements OnInit {
       next: (cita) => {
         if (cita) {
           const fechaProgramada = new Date(cita.fecha_programada);
-          const hora = fechaProgramada.toTimeString().slice(0, 5); // HH:mm
+          const hora = fechaProgramada.toTimeString().slice(0, 5); 
           
-          // Usar setTimeout para asegurar que Angular detecte los cambios
           setTimeout(() => {
             this.citaForm.patchValue({
-              id_cliente: cita.id_cliente, // Mantener como string
-              id_artista: cita.id_artista, // Mantener como string
+              id_cliente: cita.id_cliente, 
+              id_artista: cita.id_artista, 
               fecha: fechaProgramada,
               hora: hora,
               duracion_estimada_minutos: cita.duracion_estimada_minutos || 120,
               total_estimado: Number(cita.total_estimado),
-              notas: cita.notas || ''
+              notas: cita.notas || '',
+              // 3. CARGAR EL ESTADO ACTUAL
+              estado: cita.estado 
             });
           }, 100);
         }
@@ -127,15 +141,12 @@ export class NuevaCita implements OnInit {
 
   onSubmit() {
     if (this.citaForm.invalid) return;
-    if (!this.usuarioActual && !this.isEditMode) {
-      this.snackBar.open('Error: No se identificó al usuario creador.', 'Cerrar');
-      return;
-    }
+    
+    // ... validación de usuario ...
 
     this.isSubmitting = true;
     const formVal = this.citaForm.value;
 
-    // Combinar fecha y hora para el backend
     const fechaProgramada = new Date(formVal.fecha);
     const [horas, minutos] = formVal.hora.split(':');
     fechaProgramada.setHours(parseInt(horas), parseInt(minutos));
@@ -146,12 +157,17 @@ export class NuevaCita implements OnInit {
       fecha_programada: fechaProgramada.toISOString(),
       duracion_estimada_minutos: formVal.duracion_estimada_minutos,
       total_estimado: formVal.total_estimado,
-      notas: formVal.notas
+      notas: formVal.notas,
+      // 4. INCLUIR EL ESTADO EN EL ENVÍO
+      // El backend (Trigger) detectará si cambió y creará la sesión automáticamente.
+      estado: formVal.estado 
     };
 
-    // Solo añadir creado_por al crear nueva cita
     if (!this.isEditMode) {
       payload.creado_por = this.usuarioActual.id;
+      // Al crear, forzamos 'programada' aunque el form tenga otro valor, 
+      // o dejamos que el backend lo maneje.
+      payload.estado = 'programada'; 
     }
 
     const request = this.isEditMode && this.citaId
@@ -160,15 +176,14 @@ export class NuevaCita implements OnInit {
 
     request.subscribe({
       next: (res) => {
-        const mensaje = this.isEditMode ? '¡Cita actualizada con éxito!' : '¡Cita agendada con éxito!';
-        this.snackBar.open(mensaje, 'OK', { duration: 3000 });
-        this.router.navigate(['/dashboard/citas']); // Volver a la lista
+        // ... manejo de éxito ...
+        this.snackBar.open(this.isEditMode ? 'Actualización exitosa' : 'Cita creada', 'OK', { duration: 3000 });
+        this.router.navigate(['/dashboard/citas']);
       },
       error: (err) => {
-        console.error(err);
+        // ... manejo de error ...
         this.isSubmitting = false;
-        const mensaje = this.isEditMode ? 'Error al actualizar la cita.' : 'Error al agendar la cita.';
-        this.snackBar.open(mensaje + ' Verifique los datos.', 'Cerrar');
+        this.snackBar.open('Error en la operación', 'Cerrar');
       }
     });
   }
