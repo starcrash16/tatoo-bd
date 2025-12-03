@@ -1,0 +1,101 @@
+<div class="container-compra">
+
+    <!-- Header -->
+    <div class="header-box">
+      <button mat-icon-button routerLink="/dashboard/compras" class="btn-back">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <div>
+        <h1 class="page-title">REGISTRAR ENTRADA</h1>
+        <p class="page-subtitle">Nueva compra de material</p>
+      </div>
+    </div>
+  
+    <mat-card class="paper-card">
+      <form [formGroup]="form" (ngSubmit)="registrar()">
+        
+        <!-- FILA 1: DATOS GENERALES -->
+        <div class="row-grid">
+          <div class="col-grid">
+            <mat-form-field appearance="outline" class="w-100 coffee-input">
+              <mat-label>Proveedor</mat-label>
+              <mat-select formControlName="id_proveedor" placeholder="Selecciona...">
+                <mat-option *ngIf="proveedores.length === 0" disabled>Cargando lista...</mat-option>
+                <mat-option *ngFor="let p of proveedores" [value]="p.id">
+                  {{ p.nombre }}
+                </mat-option>
+              </mat-select>
+              <mat-icon matSuffix>local_shipping</mat-icon>
+              <mat-error>Requerido</mat-error>
+            </mat-form-field>
+          </div>
+  
+          <div class="col-grid">
+            <mat-form-field appearance="outline" class="w-100 coffee-input">
+              <mat-label>Folio Factura / Remisión</mat-label>
+              <input matInput formControlName="numero_factura" placeholder="Ej. F-99920">
+              <mat-icon matSuffix>receipt_long</mat-icon>
+              <mat-error>Requerido</mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+  
+        <!-- FILA 2: PRODUCTO -->
+        <div class="row-grid mt-2">
+          <div class="col-full">
+            <mat-form-field appearance="outline" class="w-100 coffee-input">
+              <mat-label>Material / Producto</mat-label>
+              <mat-select formControlName="id_material" placeholder="Buscar en inventario...">
+                <mat-option *ngIf="materiales.length === 0" disabled>Inventario vacío...</mat-option>
+                <mat-option *ngFor="let m of materiales" [value]="m.id">
+                  {{ m.nombre }} (Cód: {{m.codigo}}) - Stock: {{m.cantidad_existencia}}
+                </mat-option>
+              </mat-select>
+              <mat-icon matSuffix>inventory_2</mat-icon>
+              <mat-error>Selecciona un producto</mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+  
+        <!-- FILA 3: PANEL DE COSTOS -->
+        <div class="cost-panel mt-3">
+          <h3 class="panel-label">Detalles de la Transacción</h3>
+          <div class="row-grid">
+            
+            <div class="col-grid">
+              <mat-form-field appearance="outline" class="w-100 white-input">
+                <mat-label>Cantidad a Ingresar</mat-label>
+                <input matInput type="number" formControlName="cantidad" min="1" placeholder="0">
+                <span matSuffix class="suffix-text">Uds.</span>
+                <mat-error>Mínimo 1</mat-error>
+              </mat-form-field>
+            </div>
+  
+            <div class="col-grid">
+              <mat-form-field appearance="outline" class="w-100 white-input">
+                <mat-label>Costo Unitario</mat-label>
+                <span matPrefix class="fw-bold">$ &nbsp;</span>
+                <input matInput type="number" formControlName="precio_unitario" min="0" placeholder="0.00">
+                <mat-error>Requerido</mat-error>
+              </mat-form-field>
+            </div>
+  
+          </div>
+        </div>
+  
+        <!-- FOOTER -->
+        <div class="footer-actions">
+          <div class="total-display">
+            <span class="label">Total Compra</span>
+            <span class="amount">{{ totalCalculado | currency }}</span>
+          </div>
+  
+          <button mat-flat-button class="btn-submit" type="submit" [disabled]="form.invalid || isSubmitting">
+            <span *ngIf="!isSubmitting">REGISTRAR COMPRA</span>
+            <mat-spinner *ngIf="isSubmitting" diameter="20" class="spinner-white"></mat-spinner>
+          </button>
+        </div>
+  
+      </form>
+    </mat-card>
+  </div>

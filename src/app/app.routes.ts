@@ -18,6 +18,8 @@ import { Galeria } from './components/galeria/galeria';
 import { Contacto } from './components/contacto/contacto';
 import { Reportes } from './components/reportes/reportes';
 import { SesionesComponent } from './components/sesiones/sesiones';
+import { Compras } from './components/compras/compras';
+import { NuevaCompra } from './components/nueva-compra/nueva-compra';
 
 export const routes: Routes = [
   {
@@ -51,7 +53,9 @@ export const routes: Routes = [
       { path: 'clientes/editar/:id', component: NuevoCliente},
       { path: 'clientes/expediente/:id', component: ExpedienteMedico},
       { path: 'sesiones', component: SesionesComponent },
-      { path: 'reportes', component: Reportes }
+      { path: 'reportes', component: Reportes },
+      { path: 'compras', component: Compras },
+      { path: 'compras/nueva', component: NuevaCompra }
     ]
   },
 
