@@ -42,6 +42,35 @@
   </div>
 
   <div class="charts-grid">
+    <!-- Nueva tabla: Categorías y Total de Diseños -->
+    <mat-card class="dashboard-card" style="grid-column: span 2;">
+      <div class="card-header-simple">
+        <h3>Categorías y Total de Diseños</h3>
+        <span class="text-muted">Resumen por categoría</span>
+      </div>
+      <div class="table-wrapper">
+        <table mat-table [dataSource]="categoriasDS" class="mat-elevation-z2 full-width styled-table">
+          <!-- Categoría -->
+          <ng-container matColumnDef="categoria">
+            <th mat-header-cell *matHeaderCellDef>Categoría</th>
+            <td mat-cell *matCellDef="let row">{{ row.categoria }}</td>
+          </ng-container>
+
+          <!-- Total Diseños -->
+          <ng-container matColumnDef="totalDisenos">
+            <th mat-header-cell *matHeaderCellDef>Total de Diseños</th>
+            <td mat-cell *matCellDef="let row">{{ row.totalDisenos }}</td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="categoriasColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: categoriasColumns;"></tr>
+        </table>
+      </div>
+      <div class="table-footer" style="padding:8px 12px; text-align:right;">
+        <span class="text-muted">Total general de diseños: </span>
+        <strong>{{ categoriasTotal }}</strong>
+      </div>
+    </mat-card>
     
     <mat-card class="kpi-card dashboard-card resumen-card" style="grid-column: span 2;">
       <div class="kpi-content justify-content-center">

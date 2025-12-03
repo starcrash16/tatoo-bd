@@ -11,7 +11,13 @@
     <!-- Artista -->
     <ng-container matColumnDef="artista">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Artista</th>
-      <td mat-cell *matCellDef="let row">{{ row.artista?.toString().replace(/[_-]/g, ' ') }}</td>
+      <td mat-cell *matCellDef="let row">
+        <div class="cell-flex">
+          <div class="avatar">{{ (row.artista || '?').toString().charAt(0).toUpperCase() }}</div>
+          <div class="primary-text">{{ row.artista?.toString().replace(/[_-]/g, ' ') }}</div>
+          <div class="secondary-text">ID: {{ row.citaId }}</div>
+        </div>
+      </td>
     </ng-container>
 
     <!-- ID de la Cita -->
@@ -58,7 +64,12 @@
     <!-- Artista -->
     <ng-container matColumnDef="artista">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Artista</th>
-      <td mat-cell *matCellDef="let row">{{ row.artista?.toString().replace(/[_-]/g, ' ') }}</td>
+      <td mat-cell *matCellDef="let row">
+        <div class="cell-flex">
+          <div class="avatar">{{ (row.artista || 'T').toString().charAt(0).toUpperCase() }}</div>
+          <div class="primary-text">{{ row.artista?.toString().replace(/[_-]/g, ' ') }}</div>
+        </div>
+      </td>
     </ng-container>
 
     <!-- Total de Citas -->

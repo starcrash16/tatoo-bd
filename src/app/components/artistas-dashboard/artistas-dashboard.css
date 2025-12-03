@@ -21,17 +21,52 @@
 .estado.no_asistio { background: #fbe9e7; color: #d84315; border-color: #ffccbc; }
 
 /* Apariencia coherente con otras tablas (compacta y con zebra) */
-.styled-table { border-radius: 10px; overflow: hidden; }
-.styled-table th { font-weight: 600; background: #5a3a2a; color: #fff; }
-.styled-table tr.mat-row:nth-child(even) { background: rgba(255,255,255,0.65); }
-.styled-table tr.mat-row:nth-child(odd) { background: rgba(255,255,255,0.9); }
-.styled-table td, .styled-table th { padding: 12px 14px; }
+.cell-flex { display: flex; align-items: center; gap: 12px; }
+.avatar { 
+	width: 36px; height: 36px; border-radius: 50%; 
+	background: #5a3a2a; color: #fff; display: inline-flex; 
+	align-items: center; justify-content: center; font-weight: 700;
+}
+.primary-text { font-weight: 600; color: #3d2a1d; }
+.secondary-text { font-size: 0.8rem; color: #8a6e5a; }
+
+.styled-table { 
+	border-radius: 12px; 
+	overflow: hidden; 
+	border: 1px solid rgba(0,0,0,0.06);
+}
+.styled-table th { 
+	font-weight: 600; 
+	background: #5a3a2a; 
+	color: #fff; 
+	line-height: 1.2;
+}
+.styled-table tr.mat-row:nth-child(even) { background: rgba(255,255,255,0.8); }
+.styled-table tr.mat-row:nth-child(odd) { background: rgba(255,255,255,0.95); }
+.styled-table td, .styled-table th { padding: 10px 12px; vertical-align: middle; }
+.styled-table tr.mat-row:hover { background: #fff3e6; }
 .styled-table .mat-sort-header-container { align-items: center; }
+.styled-table .mat-column-consecutivo, 
+.styled-table .mat-column-totalCitas { text-align: center; width: 140px; }
+.styled-table .mat-column-citaId { width: 140px; }
+.styled-table .mat-column-fechaProgramada { width: 180px; }
+.styled-table .mat-column-totalMonto { text-align: right; width: 160px; }
+.styled-table .mat-column-estado, 
+.styled-table .mat-column-tipoFila { width: 180px; }
 
 /* Paginador estilo similar */
 .mat-mdc-paginator { background: transparent; }
 .mat-mdc-paginator .mat-mdc-paginator-container { gap: 8px; }
 .mat-mdc-paginator .mat-mdc-paginator-page-size { border: 1px solid rgba(0,0,0,0.12); border-radius: 8px; padding: 2px 6px; }
+
+/* Footer de tablas secundarias */
+.table-footer { 
+	display: flex; 
+	justify-content: flex-end; 
+	align-items: center; 
+	gap: 6px; 
+	border-top: 1px solid rgba(0,0,0,0.06); 
+}
 
 /* Chips para tipoFila del CUBE */
 .tipo-chip { 

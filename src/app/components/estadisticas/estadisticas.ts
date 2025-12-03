@@ -13,6 +13,13 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { CategoriasDisenosCursorService, CategoriaDisenosDTO } from '../../services/categorias-disenos-cursor-service';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration, ChartOptions } from 'chart.js';
 import { forkJoin, of } from 'rxjs';
@@ -27,12 +34,23 @@ import { catchError } from 'rxjs/operators';
     MatIconModule,
     MatListModule,
     MatDividerModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
     BaseChartDirective
   ],
   templateUrl: './estadisticas.html',
   styleUrl: './estadisticas.css',
 })
 export class Estadisticas implements OnInit {
+    // Data para la tabla de Categorías y Total de Diseños
+    categoriasColumns: string[] = ['categoria', 'totalDisenos'];
+    categoriasDS = new MatTableDataSource<{ categoria: string; totalDisenos: number }>([]);
+    categoriasTotal = 0;
+  
+    // Paginación y orden
+    @ViewChildren(MatPaginator) paginators!: QueryList<MatPaginator>;
+    @ViewChildren(MatSort) sorts!: QueryList<MatSort>;
   
   @ViewChildren(BaseChartDirective) charts: QueryList<BaseChartDirective> | undefined;
 
@@ -84,6 +102,7 @@ export class Estadisticas implements OnInit {
     private comprasService: ComprasService,
     private reportesService: ReportesService,
     private funcionesResumenService: FuncionesResumenService,
+    private categoriasDisenosService: CategoriasDisenosCursorService,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -105,7 +124,8 @@ export class Estadisticas implements OnInit {
           console.error('Error funciones_resumen:', err);
           return of({ promedio_ingresos_mensual: 0 });
         })
-      )
+      ),
+      categoriasDisenos: this.categoriasDisenosService.listar().pipe(catchError(() => of([])))
     }).subscribe({
       next: (res) => {
         if (res.citas) this.procesarKPIsCitas(res.citas);
@@ -113,6 +133,18 @@ export class Estadisticas implements OnInit {
         if (res.pagos) this.procesarFinanzas(res.pagos);
         if (res.pagos && res.compras) this.procesarComparacion3Meses(res.pagos, res.compras);
         if (res.citasDetalladas) this.citasUrgentes = res.citasDetalladas;
+
+        // Tabla Categorías y Diseños
+        if (res.categoriasDisenos) {
+          const mapped = (res.categoriasDisenos as CategoriaDisenosDTO[]).map(r => ({
+            categoria: (r.categoria ?? '').toString().replace(/[_-]/g, ' '),
+            totalDisenos: Number(r.totalDisenos ?? 0)
+          }));
+          // Orden descendente por totalDisenos
+          mapped.sort((a, b) => b.totalDisenos - a.totalDisenos);
+          this.categoriasDS = new MatTableDataSource(mapped);
+          this.categoriasTotal = mapped.reduce((acc, curr) => acc + curr.totalDisenos, 0);
+        }
 
         this.charts?.forEach(c => c.update());
         this.cdr.detectChanges(); 
