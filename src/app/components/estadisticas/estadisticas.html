@@ -21,7 +21,7 @@
   </div>
 
   <!-- CHARTS GRID -->
-  <div class="charts-grid">
+  <div class="charts-grid resumen-grid">
     
     <!-- Gráfica Ingresos -->
     <mat-card class="dashboard-card chart-card">
@@ -53,6 +53,75 @@
       </div>
     </mat-card>
 
+  </div>
+
+  <!-- BLOQUE: Funciones Resumen (antes de Actividad & Alertas) -->
+  <div class="charts-grid">
+    <!-- Tarjeta: Ingresos Anuales (SUM) -->
+    <mat-card class="kpi-card dashboard-card resumen-card">
+      <div class="kpi-content">
+        <div class="kpi-icon-container" [style.background-color]="'#4a2e1f' + '20'">
+          <mat-icon [style.color]="'#4a2e1f'">trending_up</mat-icon>
+        </div>
+        <div class="kpi-data">
+          <div class="kpi-value">{{ ingresosAnualesStr }}</div>
+          <div class="kpi-title">Ingresos Anuales</div>
+        </div>
+      </div>
+    </mat-card>
+
+    <!-- Tarjeta: Promedio de Pago Anual (AVG) -->
+    <mat-card class="kpi-card dashboard-card resumen-card">
+      <div class="kpi-content">
+        <div class="kpi-icon-container" [style.background-color]="'green' + '20'">
+          <mat-icon [style.color]="'green'">show_chart</mat-icon>
+        </div>
+        <div class="kpi-data">
+          <div class="kpi-value">{{ promedioPagoAnualStr }}</div>
+          <div class="kpi-title">Promedio de Pago Anual</div>
+        </div>
+      </div>
+    </mat-card>
+
+    <!-- Recuadro: Clasificación de Pagos (DECODE) -->
+    <mat-card class="dashboard-card chart-card resumen-card resumen-clasificacion">
+      <div class="card-header-simple">
+        <h3>Clasificación de Pagos</h3>
+        <span class="text-muted">Conteo por categoría</span>
+      </div>
+      <mat-card-content>
+        <div class="clasificacion-wrapper">
+          <table class="clasificacion-table">
+            <thead>
+              <tr>
+                <th>Categoría</th>
+                <th>Cantidad</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <span class="badge badge-alto">Alto</span>
+                </td>
+                <td class="cantidad">{{ clasificacionPagos.alto }}</td>
+              </tr>
+              <tr>
+                <td>
+                  <span class="badge badge-medio">Medio</span>
+                </td>
+                <td class="cantidad">{{ clasificacionPagos.medio }}</td>
+              </tr>
+              <tr>
+                <td>
+                  <span class="badge badge-bajo">Bajo</span>
+                </td>
+                <td class="cantidad">{{ clasificacionPagos.bajo }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </mat-card-content>
+    </mat-card>
   </div>
 
   <!-- ACTIVIDAD RECIENTE Y ALERTAS -->
