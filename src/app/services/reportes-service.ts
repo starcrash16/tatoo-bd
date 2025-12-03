@@ -10,8 +10,13 @@ export class ReportesService {
 
   constructor(private http: HttpClient) { }
 
-  // Obtiene los datos ya unidos desde el backend
+  // 1. Obtener detalles completos de una cita para el PDF (JOIN 4 tablas)
   getDetalleCitaCompleto(idCita: number): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/cita/${idCita}`);
+  }
+
+  // 2. Obtener lista de próximas citas urgentes para el Dashboard (JOIN 3 tablas)
+  getProximasCitas(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/dashboard/proximas`);
   }
 }

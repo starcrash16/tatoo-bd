@@ -21,8 +21,9 @@
   </div>
 
   <!-- CHARTS GRID -->
-  <div class="charts-grid">
+  <div class="charts-grid resumen-grid">
     
+    <!-- Gráfica Ingresos -->
     <mat-card class="dashboard-card chart-card">
       <div class="card-header-simple">
         <h3>Ingresos Financieros</h3>
@@ -37,6 +38,7 @@
       </div>
     </mat-card>
 
+    <!-- Gráfica Estados -->
     <mat-card class="dashboard-card chart-card">
       <div class="card-header-simple">
         <h3>Estado de Citas</h3>
@@ -53,6 +55,75 @@
 
   </div>
 
+  <!-- BLOQUE: Funciones Resumen (antes de Actividad & Alertas) -->
+  <div class="charts-grid">
+    <!-- Tarjeta: Ingresos Anuales (SUM) -->
+    <mat-card class="kpi-card dashboard-card resumen-card">
+      <div class="kpi-content">
+        <div class="kpi-icon-container" [style.background-color]="'#4a2e1f' + '20'">
+          <mat-icon [style.color]="'#4a2e1f'">trending_up</mat-icon>
+        </div>
+        <div class="kpi-data">
+          <div class="kpi-value">{{ ingresosAnualesStr }}</div>
+          <div class="kpi-title">Ingresos Anuales</div>
+        </div>
+      </div>
+    </mat-card>
+
+    <!-- Tarjeta: Promedio de Pago Anual (AVG) -->
+    <mat-card class="kpi-card dashboard-card resumen-card">
+      <div class="kpi-content">
+        <div class="kpi-icon-container" [style.background-color]="'green' + '20'">
+          <mat-icon [style.color]="'green'">show_chart</mat-icon>
+        </div>
+        <div class="kpi-data">
+          <div class="kpi-value">{{ promedioPagoAnualStr }}</div>
+          <div class="kpi-title">Promedio de Pago Anual</div>
+        </div>
+      </div>
+    </mat-card>
+
+    <!-- Recuadro: Clasificación de Pagos (DECODE) -->
+    <mat-card class="dashboard-card chart-card resumen-card resumen-clasificacion">
+      <div class="card-header-simple">
+        <h3>Clasificación de Pagos</h3>
+        <span class="text-muted">Conteo por categoría</span>
+      </div>
+      <mat-card-content>
+        <div class="clasificacion-wrapper">
+          <table class="clasificacion-table">
+            <thead>
+              <tr>
+                <th>Categoría</th>
+                <th>Cantidad</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <span class="badge badge-alto">Alto</span>
+                </td>
+                <td class="cantidad">{{ clasificacionPagos.alto }}</td>
+              </tr>
+              <tr>
+                <td>
+                  <span class="badge badge-medio">Medio</span>
+                </td>
+                <td class="cantidad">{{ clasificacionPagos.medio }}</td>
+              </tr>
+              <tr>
+                <td>
+                  <span class="badge badge-bajo">Bajo</span>
+                </td>
+                <td class="cantidad">{{ clasificacionPagos.bajo }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
   <!-- ACTIVIDAD RECIENTE Y ALERTAS -->
   <div class="recent-activity">
     <mat-card class="dashboard-card">
@@ -62,16 +133,24 @@
       <mat-card-content class="p-0">
         <mat-list>
           
-          <!-- SECCIÓN: PRÓXIMAS CITAS -->
+          <!-- SECCIÓN: PRÓXIMAS CITAS (Datos del JOIN) -->
           <div mat-subheader class="list-subheader">Próximas Citas</div>
+          
           <mat-list-item class="activity-item" *ngFor="let cita of citasUrgentes">
             <mat-icon matListItemIcon class="activity-icon">event</mat-icon>
-            <div matListItemTitle class="fw-bold">Cita #{{cita.id}} - ID Cliente: {{cita.id_cliente}}</div>
+            
+            <!-- Mostramos nombres reales obtenidos del reporte JOIN -->
+            <div matListItemTitle class="fw-bold">
+              {{cita.cliente_nombre}} <span class="text-muted fw-normal" style="font-size: 0.85em;">(con {{cita.artista_nombre}})</span>
+            </div>
+            
             <div matListItemLine>
-              {{cita.fecha_programada | date:'EEE dd MMM - HH:mm'}} • {{cita.estado}}
+              {{cita.fecha_programada | date:'EEE dd MMM - HH:mm'}} • 
+              <span class="text-uppercase" style="font-size: 0.75rem; font-weight: 700; color: #4a2e1f;">{{cita.estado}}</span>
             </div>
           </mat-list-item>
 
+          <!-- Mensaje si no hay citas próximas -->
           <mat-list-item *ngIf="citasUrgentes.length === 0">
             <div matListItemTitle class="text-muted fst-italic">No hay citas programadas pronto.</div>
           </mat-list-item>
@@ -80,6 +159,7 @@
 
           <!-- SECCIÓN: STOCK BAJO -->
           <div mat-subheader class="list-subheader text-danger">Alertas de Inventario</div>
+
           <mat-list-item class="activity-item" *ngFor="let material of materialesBajos">
             <mat-icon matListItemIcon class="activity-icon warning">notifications</mat-icon>
             <div matListItemTitle class="fw-bold">{{material.nombre}}</div>
@@ -88,9 +168,11 @@
             </div>
           </mat-list-item>
 
+          <!-- Mensaje si el inventario está bien -->
           <mat-list-item *ngIf="materialesBajos.length === 0">
             <div matListItemTitle class="text-success fst-italic">
-              <mat-icon class="tiny-icon me-2">check_circle</mat-icon> Inventario saludable.
+              <mat-icon class="tiny-icon me-2" style="font-size: 16px; width: 16px; height: 16px; vertical-align: middle;">check_circle</mat-icon> 
+              Inventario saludable.
             </div>
           </mat-list-item>
 

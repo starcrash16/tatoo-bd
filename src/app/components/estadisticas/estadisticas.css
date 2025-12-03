@@ -199,3 +199,35 @@ mat-divider {
     grid-template-columns: 1fr;
   }
 }
+
+/* Nuevo: grid para bloque de resumen */
+.resumen-grid {
+  gap: 1.5rem;
+}
+
+/* Mejora visual de las tarjetas del bloque resumen */
+.resumen-card {
+  border-radius: 16px !important;
+  box-shadow: 0 6px 18px rgba(74, 46, 31, 0.10) !important;
+}
+.resumen-card .kpi-content { align-items: center; }
+.resumen-card .kpi-data { display: flex; flex-direction: column; align-items: flex-start; }
+.resumen-card .kpi-value { font-weight: 800; letter-spacing: 0.5px; }
+
+/* Centrado y estilos para Clasificación de Pagos */
+.clasificacion-wrapper { display: flex; justify-content: center; align-items: center; padding: 8px 0 16px; }
+.clasificacion-table { width: 95%; border-collapse: collapse; }
+.clasificacion-table thead th { text-align: center; padding: 10px; color: #4a2e1f; font-weight: 700; }
+.clasificacion-table tbody td { padding: 12px 10px; text-align: center; }
+.clasificacion-table .cantidad { font-weight: 700; color: #4a2e1f; }
+.badge { display: inline-block; padding: 6px 12px; border-radius: 999px; font-weight: 600; }
+.badge-alto { background: #ef9a9a; color: #4a2e1f; }
+.badge-medio { background: #ffcc80; color: #4a2e1f; }
+.badge-bajo { background: #a5d6a7; color: #4a2e1f; }
+
+/* Centrar la card de Clasificación de Pagos */
+.resumen-clasificacion {
+  grid-column: 1 / -1; /* Ocupa todo el ancho disponible dentro del grid */
+  max-width: none;
+  margin: 0;
+}
