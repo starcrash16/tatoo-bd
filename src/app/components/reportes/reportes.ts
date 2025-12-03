@@ -4,6 +4,8 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 // Servicios
 import { CitasService } from '../../services/citas-service';
 import { InventarioService } from '../../services/inventario-service';
+import { ReportesService } from '../../services/reportes-service';
+
 // PDF Libraries
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
@@ -41,7 +43,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 export class Reportes implements OnInit {
   reporteForm: FormGroup;
   
-  // Catálogos
+  // Listas para los selectores
   listaCitas: any[] = [];
   listaMateriales: any[] = [];
   
@@ -51,14 +53,15 @@ export class Reportes implements OnInit {
     private fb: FormBuilder,
     private citasService: CitasService,
     private inventarioService: InventarioService,
+    private reportesService: ReportesService, // Inyectamos el servicio de reportes
     private snackBar: MatSnackBar
   ) {
     this.reporteForm = this.fb.group({
       id_cita: ['', Validators.required],
       fecha_reporte: [new Date(), Validators.required],
-      materiales_usados: [[], Validators.required], // Multi-select
+      materiales_usados: [[], Validators.required],
       observaciones: [''],
-      // Datos informativos (solo lectura en el form)
+      // Campos informativos (solo lectura)
       cliente_nombre: [{value: '', disabled: true}],
       artista_nombre: [{value: '', disabled: true}],
       tipo_trabajo: [{value: '', disabled: true}]
@@ -66,65 +69,72 @@ export class Reportes implements OnInit {
   }
 
   ngOnInit(): void {
-    this.cargarDatos();
+    this.cargarListas();
     
-    // Escuchar cambios en la cita para autocompletar datos
+    // Al seleccionar una cita, llamamos al backend para obtener los datos cruzados (JOIN)
     this.reporteForm.get('id_cita')?.valueChanges.subscribe(id => {
-      this.autocompletarDatosCita(id);
+      if(id) this.cargarDetalleCompleto(id);
     });
   }
 
-  cargarDatos() {
-    // Cargar Citas
-    this.citasService.getCitas().subscribe({
-      next: (data) => this.listaCitas = data,
-      error: (err) => console.error(err)
-    });
-
-    // Cargar Materiales
-    this.inventarioService.getMateriales().subscribe({
-      next: (data) => this.listaMateriales = data,
-      error: (err) => console.error(err)
-    });
+  cargarListas() {
+    this.citasService.getCitas().subscribe(data => this.listaCitas = data);
+    this.inventarioService.getMateriales().subscribe(data => this.listaMateriales = data);
   }
 
-  autocompletarDatosCita(idCita: number) {
-    const citaSeleccionada = this.listaCitas.find(c => c.id === idCita);
-    if (citaSeleccionada) {
-      // Aquí simulamos datos si el backend solo devuelve IDs. 
-      // Idealmente tu backend devolvería nombres en un JOIN.
-      this.reporteForm.patchValue({
-        cliente_nombre: `Cliente ID: ${citaSeleccionada.id_cliente}`, // Ajustar si tienes el nombre real
-        artista_nombre: `Artista ID: ${citaSeleccionada.id_artista}`,
-        tipo_trabajo: `Cita #${citaSeleccionada.id} - ${citaSeleccionada.estado}`
-      });
-    }
+  // --- AQUÍ ESTÁ LA LÓGICA QUE CUMPLE EL REQUERIMIENTO DE JOIN ---
+  cargarDetalleCompleto(idCita: number) {
+    this.reporteForm.patchValue({
+      cliente_nombre: 'Cargando...',
+      artista_nombre: 'Cargando...',
+      tipo_trabajo: 'Consultando base de datos...'
+    });
+
+    this.reportesService.getDetalleCitaCompleto(idCita).subscribe({
+      next: (data) => {
+        // Data ya viene con nombres reales gracias al SQL JOIN en el backend
+        this.reporteForm.patchValue({
+          cliente_nombre: `${data.cliente_nombre} ${data.cliente_apellido}`,
+          artista_nombre: `${data.artista_nombre} ${data.artista_apellido}`,
+          tipo_trabajo: `Cita #${data.folio} - ${data.estado} (${data.artista_especialidad})`
+        });
+      },
+      error: (err) => {
+        console.error(err);
+        this.snackBar.open('Error al obtener detalles de la cita. Verifica que el backend tenga la ruta /api/reportes/cita/:id', 'Cerrar');
+        // Reset en caso de error
+        this.reporteForm.patchValue({
+          cliente_nombre: 'Error',
+          artista_nombre: 'Error',
+          tipo_trabajo: 'No disponible'
+        });
+      }
+    });
   }
 
   generarPDF() {
     if (this.reporteForm.invalid) {
-      this.snackBar.open('Por favor completa los campos requeridos', 'Cerrar', { duration: 3000 });
+      this.snackBar.open('Por favor selecciona una cita y los materiales utilizados.', 'Cerrar');
       return;
     }
 
     this.isGenerating = true;
-    const formValues = this.reporteForm.getRawValue(); // rawValue incluye los disabled
+    const formValues = this.reporteForm.getRawValue();
+    // Filtramos la lista completa de materiales para quedarnos solo con los seleccionados
     const materialesSeleccionados = this.listaMateriales.filter(m => formValues.materiales_usados.includes(m.id));
 
-    // --- LÓGICA DE GENERACIÓN PDF ---
     const doc = new jsPDF();
 
-    // 1. Encabezado Estilo Gangster
+    // 1. Encabezado con estilo de marca
     doc.setFillColor(74, 46, 31); // Café #4a2e1f
-    doc.rect(0, 0, 210, 40, 'F'); // Barra superior
+    doc.rect(0, 0, 210, 40, 'F');
     
     doc.setTextColor(243, 210, 178); // Crema #f3d2b2
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(22);
     doc.text('GANGSTER TATTOO STUDIO', 105, 20, { align: 'center' });
-    
     doc.setFontSize(12);
-    doc.text('REPORTE OPERATIVO DE SESIÓN', 105, 30, { align: 'center' });
+    doc.text('REPORTE OPERATIVO CONSOLIDADO', 105, 30, { align: 'center' });
 
     // 2. Información General
     doc.setTextColor(0, 0, 0);
@@ -133,9 +143,9 @@ export class Reportes implements OnInit {
     doc.text(`Folio Cita: #${formValues.id_cita}`, 150, 50);
 
     doc.setDrawColor(74, 46, 31);
-    doc.line(14, 55, 196, 55); // Línea divisora
+    doc.line(14, 55, 196, 55);
 
-    // 3. Detalles de la Sesión
+    // 3. Detalles del Servicio (Datos obtenidos del JOIN)
     doc.setFontSize(11);
     doc.setFont('helvetica', 'bold');
     doc.text('DETALLES DEL SERVICIO', 14, 65);
@@ -146,14 +156,15 @@ export class Reportes implements OnInit {
     doc.text(`Artista Encargado: ${formValues.artista_nombre}`, 14, 82);
     doc.text(`Descripción: ${formValues.tipo_trabajo}`, 14, 89);
 
-    // 4. Tabla de Materiales Usados
+    // 4. Tabla de Materiales Utilizados
     doc.setFont('helvetica', 'bold');
     doc.text('MATERIALES UTILIZADOS', 14, 105);
 
+    // Preparamos los datos para autoTable
     const tableData = materialesSeleccionados.map(m => [
-      m.codigo,
-      m.nombre,
-      '1 Unidad (Estimado)', // Aquí podrías pedir cantidad en el form si quisieras
+      m.codigo, 
+      m.nombre, 
+      '1 Unidad', // Dato estimado
       `$${m.precio_costo}`
     ]);
 
@@ -162,7 +173,7 @@ export class Reportes implements OnInit {
       head: [['SKU', 'Material', 'Cantidad', 'Costo Unit.']],
       body: tableData,
       theme: 'grid',
-      headStyles: { fillColor: [74, 46, 31], textColor: [243, 210, 178] }, // Estilo Gangster
+      headStyles: { fillColor: [74, 46, 31], textColor: [243, 210, 178] }, // Colores de marca
       styles: { fontSize: 9 }
     });
 
@@ -172,17 +183,21 @@ export class Reportes implements OnInit {
     doc.setFont('helvetica', 'bold');
     doc.text('OBSERVACIONES:', 14, finalY);
     doc.setFont('helvetica', 'normal');
-    doc.text(formValues.observaciones || 'Sin observaciones adicionales.', 14, finalY + 7);
+    // splitTextToSize ajusta el texto largo para que no se salga de la página
+    const observacionesLines = doc.splitTextToSize(formValues.observaciones || 'Sin observaciones adicionales.', 180);
+    doc.text(observacionesLines, 14, finalY + 7);
 
-    // Líneas de firma
-    doc.line(30, 270, 90, 270);
-    doc.text('Firma del Artista', 45, 275);
+    // Espacio para firmas
+    const firmaY = finalY + 40;
+    doc.setLineWidth(0.5);
+    doc.line(30, firmaY, 90, firmaY);
+    doc.text('Firma del Artista', 45, firmaY + 5);
 
-    doc.line(120, 270, 180, 270);
-    doc.text('Conformidad del Cliente', 130, 275);
+    doc.line(120, firmaY, 180, firmaY);
+    doc.text('Conformidad del Cliente', 130, firmaY + 5);
 
-    // Guardar
-    doc.save(`Reporte_Cita_${formValues.id_cita}.pdf`);
+    // Guardar el archivo
+    doc.save(`Reporte_Gangster_Cita_${formValues.id_cita}.pdf`);
     
     this.isGenerating = false;
     this.snackBar.open('PDF Generado correctamente', 'OK', { duration: 3000 });
