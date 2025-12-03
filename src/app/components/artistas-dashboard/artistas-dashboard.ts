@@ -93,8 +93,8 @@ export class ArtistasDashboard implements OnInit {
         const mapped: CubeRow[] = rows.map(r => ({
           categoria: r.categoria,
           artista: r.artista,
-          totalCitas: Number(r.totalCitas ?? 0),
-          totalMonto: Number(r.totalMonto ?? 0),
+          totalCitas: Number((r.totalCitas ?? r.totalDisenos) ?? 0),
+          totalMonto: Number((r.totalMonto ?? r.totalPrecio) ?? 0),
           tipoFila: (r.tipoFila as any) || 'detalle'
         }));
         Promise.resolve().then(() => {

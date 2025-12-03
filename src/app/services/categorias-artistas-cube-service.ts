@@ -5,8 +5,10 @@ import { Observable, map } from 'rxjs';
 export interface CubeRowDTO {
   categoria: string;
   artista: string;
-  totalCitas: number;
-  totalMonto: number;
+  totalCitas?: number; // puede venir como totalDisenos
+  totalMonto?: number; // puede venir como totalPrecio
+  totalDisenos?: number;
+  totalPrecio?: number;
   tipoFila?: 'detalle' | 'total_categoria' | 'total_artista' | 'total_general' | string;
 }
 
