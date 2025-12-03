@@ -55,7 +55,10 @@ export const routes: Routes = [
       { path: 'clientes/editar/:id', component: NuevoCliente},
       { path: 'clientes/expediente/:id', component: ExpedienteMedico},
       { path: 'sesiones', component: SesionesComponent },
-      { path: 'reportes', component: Reportes }
+      { path: 'reportes', component: Reportes },
+      { path: 'artistas', component: ArtistasDashboard },
+      { path: 'compras', component: Compras },
+      { path: 'compras/nueva', component: NuevaCompra }
     ]
   },
 
