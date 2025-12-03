@@ -1,0 +1,172 @@
+<div class="resumen-container">
+
+  <!-- Header con botón volver -->
+  <div class="section-header mb-4">
+    <div class="d-flex justify-content-between align-items-center">
+      <div>
+        <h1>Resumen de Cita</h1>
+        <span class="subtitle">Detalles completos de la cita</span>
+      </div>
+      <button mat-flat-button class="back-btn" (click)="volver()">
+        <mat-icon>arrow_back</mat-icon> VOLVER A CITAS
+      </button>
+    </div>
+  </div>
+
+  <!-- Mensaje de carga -->
+  <div *ngIf="cargando" class="text-center py-5">
+    <mat-icon class="loading-icon">hourglass_empty</mat-icon>
+    <p class="mt-3">Cargando resumen...</p>
+  </div>
+
+  <!-- Contenido del resumen -->
+  <div *ngIf="!cargando && cita" class="row">
+    
+    <!-- Columna Izquierda: Información General -->
+    <div class="col-lg-4 mb-4">
+      <mat-card class="profile-card">
+        <mat-card-content>
+          <div class="text-center mb-4">
+            <div class="avatar-large">
+              <mat-icon>event</mat-icon>
+            </div>
+            <h2 class="client-name mt-3">Cita #{{ cita.id_cita || '-' }}</h2>
+            <mat-chip-set class="justify-content-center mt-2">
+                <mat-chip [class]="'status-' + (cita.estado_cita?.toLowerCase() || 'pendiente')">
+                    {{ cita.estado_cita || '-' }}
+                </mat-chip>
+            </mat-chip-set>
+          </div>
+
+          <mat-divider class="my-3"></mat-divider>
+
+          <!-- Datos de la Cita -->
+          <div class="info-section">
+            <h3 class="section-title">
+              <mat-icon>info</mat-icon> Detalles Generales
+            </h3>
+            
+            <div class="info-row">
+              <mat-icon class="info-icon">calendar_today</mat-icon>
+              <div class="info-content">
+                <span class="info-label">Fecha Programada</span>
+                <span class="info-value">{{ cita.fecha_programada ? (cita.fecha_programada | date:'dd/MM/yyyy, h:mm a') : '-' }}</span>
+              </div>
+            </div>
+
+            <div class="info-row">
+              <mat-icon class="info-icon">attach_money</mat-icon>
+              <div class="info-content">
+                <span class="info-label">Total Estimado</span>
+                <span class="info-value">{{ cita.total_estimado || '-' }}</span>
+              </div>
+            </div>
+
+             <div class="info-row">
+              <mat-icon class="info-icon">payments</mat-icon>
+              <div class="info-content">
+                <span class="info-label">Total Pagado</span>
+                <span class="info-value">{{ cita.total_pagado || '-' }}</span>
+              </div>
+            </div>
+
+             <div class="info-row">
+              <mat-icon class="info-icon">format_list_numbered</mat-icon>
+              <div class="info-content">
+                <span class="info-label">Total Sesiones</span>
+                <span class="info-value">{{ cita.total_sesiones || '-' }}</span>
+              </div>
+            </div>
+
+            <div class="info-row">
+              <mat-icon class="info-icon">label</mat-icon>
+              <div class="info-content">
+                <span class="info-label">Estado</span>
+                <span class="badge" [ngClass]="{
+                  'badge-pendiente': cita.estado_cita?.toLowerCase() === 'pendiente',
+                  'badge-confirmada': cita.estado_cita?.toLowerCase() === 'confirmada',
+                  'badge-cancelada': cita.estado_cita?.toLowerCase() === 'cancelada',
+                  'badge-completada': cita.estado_cita?.toLowerCase() === 'completada'
+                }">
+                  {{ cita.estado_cita || '-' }}
+                </span>
+              </div>
+            </div>
+
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- Columna Derecha: Cliente, Artista y Diseño -->
+    <div class="col-lg-8">
+      
+      <!-- Cliente y Artista -->
+      <div class="row">
+        <div class="col-md-6 mb-4">
+            <mat-card class="info-card h-100">
+                <mat-card-header>
+                    <mat-card-title>Cliente</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <div class="info-row">
+                        <mat-icon class="info-icon">person</mat-icon>
+                        <div class="info-content">
+                            <span class="info-label">Nombre</span>
+                            <span class="info-value">{{ cita.nombre_cliente || '-' }}</span>
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        <mat-icon class="info-icon">phone</mat-icon>
+                        <div class="info-content">
+                            <span class="info-label">Teléfono</span>
+                            <span class="info-value">{{ cita.telefono_cliente || '-' }}</span>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <mat-card class="info-card h-100">
+                <mat-card-header>
+                    <mat-card-title>Artista</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <div class="info-row">
+                        <mat-icon class="info-icon">brush</mat-icon>
+                        <div class="info-content">
+                            <span class="info-label">Nombre</span>
+                            <span class="info-value">{{ cita.nombre_artista || '-' }}</span>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+      </div>
+
+      <!-- Diseño -->
+      <mat-card class="info-card mb-4">
+        <mat-card-header>
+            <mat-card-title>Diseño</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <div class="info-row">
+                <mat-icon class="info-icon">image</mat-icon>
+                <div class="info-content">
+                    <span class="info-label">Título del Diseño</span>
+                    <span class="info-value">{{ cita.titulo_diseno || '-' }}</span>
+                </div>
+            </div>
+            <div *ngIf="cita.imagen_diseno" class="design-image-container mt-3">
+                <img [src]="cita.imagen_diseno" alt="Diseño del tatuaje" class="design-image">
+            </div>
+            <div *ngIf="!cita.imagen_diseno" class="text-muted mt-3">
+                No hay imagen de diseño disponible.
+            </div>
+        </mat-card-content>
+      </mat-card>
+
+    </div>
+  </div>
+</div>

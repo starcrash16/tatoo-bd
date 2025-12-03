@@ -11,6 +11,7 @@ import { ExpedienteMedico } from './components/expediente-medico/expediente-medi
 import { MainLayout } from './layout/main-layout/main-layout';
 import { Citas } from './components/citas/citas';
 import { NuevaCita } from './components/nueva-cita/nueva-cita';
+import { ResumenCita } from './components/resumen-cita/resumen-cita';
 import { Artistas } from './components/artistas/artistas';
 import { Estilos } from './components/estilos/estilos';
 import { Galeria } from './components/galeria/galeria';
@@ -40,6 +41,7 @@ export const routes: Routes = [
       { path: 'citas', component: Citas },
       { path: 'citas/nueva', component: NuevaCita },
       { path: 'citas/editar/:id', component: NuevaCita },
+      { path: 'citas/resumen/:id', component: ResumenCita },
       { path: 'inventario', component: Inventario },
       { path: 'inventario/nuevo', component: NuevoProducto },
       { path: 'inventario/editar/:id', component: NuevoProducto },

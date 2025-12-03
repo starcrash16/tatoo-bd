@@ -19,6 +19,10 @@ export class CitasService {
     return this.http.get<any>(`${this.apiUrl}/citas/${id}`);
   }
 
+  getResumenCita(id: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/citas/resumen/${id}`);
+  }
+
   generarCita(cita: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/citas/generar`, cita);
   }

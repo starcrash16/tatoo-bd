@@ -80,6 +80,10 @@ export class Citas implements OnInit {
     this.router.navigate(['/dashboard/citas/nueva']);
   }
 
+  verResumen(id: string) {
+    this.router.navigate(['/dashboard/citas/resumen', id]);
+  }
+
   // 5. FUNCIÓN PARA ELIMINAR CITA
   eliminarCita(cita: any) {
     if (confirm(`¿Estás seguro de eliminar la cita #${cita.id}?`)) {
