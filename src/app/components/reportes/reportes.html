@@ -1,33 +1,37 @@
-<div class="reportes-container fade-in">
-  
-  <div class="header-section mb-4">
-    <h1 class="main-title">GENERAR REPORTE</h1>
-    <p class="subtitle">Documentación de sesión y consumo de materiales</p>
+<div class="reportes-container">
+
+  <!-- ENCABEZADO -->
+  <div class="section-header">
+    <h1>Centro de Reportes</h1>
+    <span class="subtitle">Documentación operativa y análisis financiero</span>
   </div>
 
-  <mat-card class="form-card">
+  <!-- TARJETA 1: GENERADOR PDF -->
+  <mat-card class="custom-card mb-5">
     <mat-card-content class="p-4">
       
+      <div class="d-flex align-items-center mb-5 gap-2 border-bottom-coffee pb-2">
+        <mat-icon class="text-coffee">description</mat-icon>
+        <h2 class="card-title mb-0">Generar Acta de Servicio</h2>
+      </div>
+
       <form [formGroup]="reporteForm" (ngSubmit)="generarPDF()">
         
-        <!-- SELECCIÓN DE CITA -->
-        <h3 class="section-divider">Datos de la Sesión</h3>
-        
-        <div class="row">
+        <!-- FILA 1: Cita y Fecha -->
+        <div class="row mb-4">
           <div class="col-md-8">
-            <mat-form-field appearance="outline" class="w-100 custom-field">
-              <mat-label>Seleccionar Cita</mat-label>
+            <mat-form-field appearance="outline" class="w-100 custom-form-field">
+              <mat-label>Seleccionar Cita Pagada</mat-label>
               <mat-select formControlName="id_cita">
                 <mat-option *ngFor="let cita of listaCitas" [value]="cita.id">
-                  Cita #{{cita.id}} - {{cita.fecha_programada | date:'shortDate'}} ({{cita.estado}})
+                  #{{cita.id}} - {{cita.fecha_programada | date:'shortDate'}} ({{cita.estado}})
                 </mat-option>
               </mat-select>
-              <mat-error>Requerido para llenar datos</mat-error>
+              <mat-icon matSuffix>event_note</mat-icon>
             </mat-form-field>
           </div>
-
           <div class="col-md-4">
-            <mat-form-field appearance="outline" class="w-100 custom-field">
+            <mat-form-field appearance="outline" class="w-100 custom-form-field">
               <mat-label>Fecha del Reporte</mat-label>
               <input matInput [matDatepicker]="picker" formControlName="fecha_reporte">
               <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
@@ -36,17 +40,17 @@
           </div>
         </div>
 
-        <!-- DATOS AUTOCOMPLETADOS (READONLY) -->
-        <div class="row">
+        <!-- FILA 2: Datos Automáticos (Readonly) -->
+        <div class="row mb-4">
           <div class="col-md-6">
-            <mat-form-field appearance="outline" class="w-100 custom-field readonly-field">
+            <mat-form-field appearance="outline" class="w-100 custom-form-field readonly-field">
               <mat-label>Cliente</mat-label>
               <input matInput formControlName="cliente_nombre">
               <mat-icon matSuffix>person</mat-icon>
             </mat-form-field>
           </div>
           <div class="col-md-6">
-            <mat-form-field appearance="outline" class="w-100 custom-field readonly-field">
+            <mat-form-field appearance="outline" class="w-100 custom-form-field readonly-field">
               <mat-label>Artista</mat-label>
               <input matInput formControlName="artista_nombre">
               <mat-icon matSuffix>brush</mat-icon>
@@ -54,34 +58,114 @@
           </div>
         </div>
 
-        <!-- SELECCIÓN DE MATERIALES -->
-        <h3 class="section-divider mt-3">Consumo de Inventario</h3>
-        
-        <mat-form-field appearance="outline" class="w-100 custom-field">
-          <mat-label>Materiales Utilizados (Selección Múltiple)</mat-label>
-          <mat-select formControlName="materiales_usados" multiple>
-            <mat-option *ngFor="let material of listaMateriales" [value]="material.id">
-              {{material.nombre}} (Disp: {{material.cantidad_existencia}})
-            </mat-option>
-          </mat-select>
-          <mat-icon matSuffix>inventory_2</mat-icon>
-        </mat-form-field>
+        <!-- FILA 3: Materiales -->
+        <div class="row mb-4">
+          <div class="col-12">
+            <mat-form-field appearance="outline" class="w-100 custom-form-field">
+              <mat-label>Materiales Consumidos (Selección Múltiple)</mat-label>
+              <mat-select formControlName="materiales_usados" multiple>
+                <mat-option *ngFor="let m of listaMateriales" [value]="m.id">
+                  {{m.codigo}} - {{m.nombre}}
+                </mat-option>
+              </mat-select>
+              <mat-icon matSuffix>inventory_2</mat-icon>
+            </mat-form-field>
+          </div>
+        </div>
 
-        <mat-form-field appearance="outline" class="w-100 custom-field">
-          <mat-label>Observaciones / Notas de la Sesión</mat-label>
-          <textarea matInput formControlName="observaciones" rows="3" placeholder="Reacciones de piel, cambios en diseño, etc."></textarea>
-        </mat-form-field>
+        <!-- FILA 4: Observaciones -->
+        <div class="row mb-4">
+          <div class="col-12">
+            <mat-form-field appearance="outline" class="w-100 custom-form-field">
+              <mat-label>Observaciones / Notas Adicionales</mat-label>
+              <textarea matInput formControlName="observaciones" rows="3"></textarea>
+            </mat-form-field>
+          </div>
+        </div>
 
-        <!-- BOTÓN GENERAR -->
-        <div class="d-flex justify-content-end mt-4">
-          <button mat-flat-button class="pdf-btn py-4 px-5" [disabled]="reporteForm.invalid || isGenerating">
+        <!-- BOTÓN DE DESCARGA -->
+        <div class="d-flex justify-content-end mt-5">
+          <button mat-flat-button class="pdf-btn py-3 px-5 shadow-lg" [disabled]="reporteForm.invalid || isGenerating">
             <mat-icon class="me-2">picture_as_pdf</mat-icon>
             {{ isGenerating ? 'GENERANDO...' : 'DESCARGAR PDF' }}
           </button>
         </div>
 
       </form>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- TARJETA 2: REPORTE FINANCIERO (ROLLUP) -->
+  <mat-card class="custom-card">
+    <mat-card-content class="p-4">
+      
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-5 gap-3">
+        <div class="d-flex flex-column">
+          <div class="d-flex align-items-center gap-2">
+            <mat-icon class="text-coffee">analytics</mat-icon>
+            <h2 class="card-title mb-0">Reporte Financiero</h2>
+          </div>
+          <small class="text-muted mt-1 ms-1">Agrupación por Mes y Artista con Subtotales automáticos</small>
+        </div>
+
+        <button mat-flat-button class="add-btn px-4" (click)="cargarReporteFinanciero()">
+          <mat-icon>refresh</mat-icon> ACTUALIZAR
+        </button>
+      </div>
+
+      <div class="table-container mat-elevation-z0">
+        <table mat-table [dataSource]="dataSourceRollup">
+
+          <!-- Columna Mes -->
+          <ng-container matColumnDef="mes">
+            <th mat-header-cell *matHeaderCellDef> PERIODO </th>
+            <td mat-cell *matCellDef="let row" [class.fw-bold]="isGrandTotal(row)"> 
+              <div class="d-flex align-items-center gap-2">
+                <mat-icon class="tiny-icon" *ngIf="!isGrandTotal(row)">calendar_today</mat-icon>
+                <span>{{ row.mes ? row.mes : 'HISTÓRICO COMPLETO' }}</span>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Columna Artista -->
+          <ng-container matColumnDef="artista">
+            <th mat-header-cell *matHeaderCellDef> ARTISTA </th>
+            <td mat-cell *matCellDef="let row"> 
+              <div *ngIf="row.artista" class="d-flex align-items-center gap-2">
+                <div class="avatar-circle-small">{{row.artista.charAt(0)}}</div>
+                <span>{{ row.artista }}</span>
+              </div>
+              <span *ngIf="isSubtotal(row)" class="badge subtotal-badge">TOTAL {{row.mes}}</span>
+              <span *ngIf="isGrandTotal(row)" class="badge total-badge">GRAN TOTAL</span>
+            </td>
+          </ng-container>
+
+          <!-- Columna Citas -->
+          <ng-container matColumnDef="citas">
+            <th mat-header-cell *matHeaderCellDef class="text-center"> CITAS </th>
+            <td mat-cell *matCellDef="let row" class="text-center"> 
+              <span class="fw-bold">{{ row.cantidad_citas }}</span> 
+            </td>
+          </ng-container>
+
+          <!-- Columna Ingresos -->
+          <ng-container matColumnDef="ingresos">
+            <th mat-header-cell *matHeaderCellDef> INGRESOS </th>
+            <td mat-cell *matCellDef="let row" [class.fw-bold]="!row.artista"> 
+               {{ row.total_ingresos | currency }} 
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumnsRollup"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumnsRollup;"
+              [ngClass]="{'row-subtotal': isSubtotal(row), 'row-total': isGrandTotal(row)}">
+          </tr>
+
+        </table>
+        <mat-paginator [pageSizeOptions]="[10, 20]" showFirstLastButtons></mat-paginator>
+      </div>
 
     </mat-card-content>
   </mat-card>
+
 </div>

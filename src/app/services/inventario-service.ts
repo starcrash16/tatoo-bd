@@ -40,4 +40,9 @@ export class InventarioService {
   getMaterialById(id: number): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/materiales/${id}`);
   }
+
+  // 7. NUEVO: Reporte agrupado por proveedor (GROUP BY / HAVING)
+  getReportePorProveedor(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/reporte-proveedores`);
+  }
 }

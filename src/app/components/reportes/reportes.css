@@ -1,8 +1,9 @@
 /* --- BASE --- */
 .reportes-container {
-  max-width: 900px;
+  max-width: 1400px;
   margin: 0 auto;
   color: #4a2e1f;
+  padding-bottom: 3rem;
   animation: fadeIn 0.5s ease-out;
 }
 
@@ -11,35 +12,39 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* --- HEADER --- */
-.main-title {
+/* --- TEXTOS --- */
+.section-header {
+  margin-bottom: 2rem;
+  border-left: 5px solid #4a2e1f;
+  padding-left: 1.5rem;
+}
+
+.section-header h1 {
   font-family: 'Anton', sans-serif;
   color: #4a2e1f;
   font-size: 2.5rem;
-  margin-bottom: 5px;
+  margin-bottom: 0;
   text-transform: uppercase;
-  letter-spacing: 1px;
 }
 
-.subtitle {
+.section-header .subtitle {
   font-family: 'Inter', sans-serif;
   color: #6d4c41;
 }
 
-.section-divider {
-  font-family: 'Inter', sans-serif;
-  font-size: 1.1rem;
+.card-title {
+  font-family: 'Anton', sans-serif;
   color: #4a2e1f;
-  border-bottom: 1px solid rgba(74, 46, 31, 0.2);
-  padding-bottom: 10px;
-  margin-bottom: 20px;
-  font-weight: 600;
+  font-size: 1.5rem;
   text-transform: uppercase;
-  letter-spacing: 1px;
 }
 
+.text-coffee { color: #4a2e1f; }
+.border-bottom-coffee { border-bottom: 1px solid rgba(74, 46, 31, 0.1); }
+.text-muted { color: #8d6e63 !important; }
+
 /* --- TARJETA --- */
-.form-card {
+.custom-card {
   background-color: #fdf5eb !important;
   border-radius: 16px !important;
   box-shadow: 0 4px 20px rgba(74, 46, 31, 0.08) !important;
@@ -47,54 +52,115 @@
 }
 
 /* --- INPUTS --- */
-::ng-deep .custom-field .mat-mdc-text-field-wrapper {
+::ng-deep .custom-form-field { height: 56px; }
+
+::ng-deep .custom-form-field .mat-mdc-text-field-wrapper {
   background-color: #ffffff !important;
   border-radius: 8px;
-  border: 1px solid rgba(74, 46, 31, 0.1);
+  border: 1px solid rgba(74, 46, 31, 0.15);
 }
 
-::ng-deep .custom-field .mat-mdc-form-field-focus-overlay {
-  background-color: transparent !important;
-}
-
-::ng-deep .custom-field.mat-focused .mat-mdc-notched-outline__border {
-  border-color: #4a2e1f !important;
-  border-width: 2px !important;
-}
-
-::ng-deep .custom-field.mat-focused .mat-mdc-floating-label {
-  color: #4a2e1f !important;
-}
-
-::ng-deep .custom-field .mat-icon {
-  color: #6d4c41;
-}
-
-/* Estilo para campos deshabilitados (readonly) */
 ::ng-deep .readonly-field .mat-mdc-text-field-wrapper {
-  background-color: #f5f5f5 !important; /* Gris suave */
+  background-color: #f5f5f5 !important;
   border: 1px dashed rgba(74, 46, 31, 0.2);
 }
 
-/* --- BOTÓN PDF --- */
+/* --- BOTONES --- */
 .pdf-btn {
-  background-color: #b71c1c !important; /* Rojo PDF elegante */
+  background-color: #b71c1c !important; /* Rojo */
   color: #ffffff !important;
   font-family: 'Inter', sans-serif;
   font-weight: 700;
-  letter-spacing: 1px;
   border-radius: 8px !important;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(183, 28, 28, 0.3);
+  height: 50px;
 }
 
-.pdf-btn:hover:not([disabled]) {
-  background-color: #d32f2f !important;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(183, 28, 28, 0.4);
+.add-btn {
+  background-color: #4a2e1f !important; /* Café */
+  color: #f3d2b2 !important;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  border-radius: 8px !important;
+  height: 48px;
 }
 
-.pdf-btn:disabled {
-  background-color: #ef9a9a !important;
-  opacity: 0.7;
+/* --- TABLA --- */
+.table-container {
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(74, 46, 31, 0.12);
+  margin-top: 1rem;
 }
+
+table {
+  width: 100%;
+  background-color: #ffffff !important;
+}
+
+th.mat-mdc-header-cell {
+  background-color: #4a2e1f !important;
+  color: #f3d2b2 !important;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 18px 16px !important;
+  font-size: 0.85rem;
+}
+
+td.mat-mdc-cell {
+  color: #3e2723 !important;
+  font-family: 'Inter', sans-serif;
+  padding: 16px !important;
+  border-bottom-color: rgba(74, 46, 31, 0.08) !important;
+}
+
+/* FILAS ESPECIALES (ROLLUP) */
+.row-subtotal {
+  background-color: #fff8e1 !important; /* Amarillo muy suave */
+  font-weight: 600;
+}
+
+.row-total {
+  background-color: #3e2723 !important; /* Café muy oscuro */
+}
+
+/* Texto especial para Gran Total */
+.row-total td.mat-mdc-cell {
+  color: #ffecb3 !important; /* Dorado suave */
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+/* --- BADGES --- */
+.avatar-circle-small {
+  width: 30px; height: 30px;
+  background-color: #6d4c41; color: #fff;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: bold; font-size: 0.8rem;
+}
+
+.badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  display: inline-block;
+}
+
+.subtotal-badge {
+  background-color: #fff3e0;
+  color: #e65100;
+  border: 1px solid #ffb74d;
+}
+
+.total-badge {
+  background-color: #000;
+  color: #ffd700;
+  border: 1px solid #ffd700;
+  box-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+}
+
+.tiny-icon { font-size: 16px; width: 16px; height: 16px; color: #8d6e63; }
+.fw-bold { font-weight: 700; }

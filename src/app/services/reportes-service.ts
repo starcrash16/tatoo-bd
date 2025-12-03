@@ -19,4 +19,9 @@ export class ReportesService {
   getProximasCitas(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/dashboard/proximas`);
   }
+
+  // 3. Reporte con ROLLUP
+  getReporteFinancieroRollup(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/financiero-rollup`);
+  }
 }

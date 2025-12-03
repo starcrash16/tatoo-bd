@@ -127,6 +127,47 @@
           </tr>
         </table>
       </div>
+
+      <div class="d-flex align-items-center mt-5 mb-3 gap-2">
+        <h2 class="mb-0">Estadísticas por Proveedor</h2>
+      </div>
+
+      <div class="table-container mat-elevation-z0">
+        <table mat-table [dataSource]="dataSourceProveedores">
+
+          <ng-container matColumnDef="proveedor">
+            <th mat-header-cell *matHeaderCellDef> Proveedor </th>
+            <td mat-cell *matCellDef="let row" class="fw-bold"> {{row.proveedor}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="variedad">
+            <th mat-header-cell *matHeaderCellDef> Variedad Productos </th>
+            <td mat-cell *matCellDef="let row"> 
+              <span class="badge disponible">{{row.variedad_productos}} Tipos</span>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="total">
+            <th mat-header-cell *matHeaderCellDef> Total Unidades </th>
+            <td mat-cell *matCellDef="let row"> {{row.total_unidades_compradas}} pzas. </td>
+          </ng-container>
+
+          <ng-container matColumnDef="fecha">
+            <th mat-header-cell *matHeaderCellDef> Última Actividad </th>
+            <td mat-cell *matCellDef="let row"> {{row.ultima_compra | date:'mediumDate'}} </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumnsProveedores"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumnsProveedores;"></tr>
+
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell text-center py-4" colspan="4">
+              No hay datos de proveedores disponibles.
+            </td>
+          </tr>
+        </table>
+      </div>
+
     </mat-card-content>
   </mat-card>
 </div>

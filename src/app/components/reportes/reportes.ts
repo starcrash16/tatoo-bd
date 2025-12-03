@@ -1,16 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+
 // Servicios
 import { CitasService } from '../../services/citas-service';
 import { InventarioService } from '../../services/inventario-service';
 import { ReportesService } from '../../services/reportes-service';
 
-// PDF Libraries
-import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
-
-// Material Modules
+// Material Modules (Solo Módulos en los imports del componente)
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
@@ -20,6 +17,21 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTableModule, MatTableDataSource } from '@angular/material/table';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatSort, MatSortModule } from '@angular/material/sort';
+
+// PDF Libraries
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+
+// Interfaz para el reporte financiero (ROLLUP)
+export interface FinancieroRow {
+  mes: string | null;
+  artista: string | null;
+  total_ingresos: number;
+  cantidad_citas: number;
+}
 
 @Component({
   selector: 'app-reportes',
@@ -35,7 +47,10 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
     MatIconModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatTableModule,      // Importante: Aquí va el módulo, no el DataSource
+    MatPaginatorModule,
+    MatSortModule
   ],
   templateUrl: './reportes.html',
   styleUrl: './reportes.css'
@@ -43,17 +58,23 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 export class Reportes implements OnInit {
   reporteForm: FormGroup;
   
-  // Listas para los selectores
+  // Listas para el formulario
   listaCitas: any[] = [];
   listaMateriales: any[] = [];
-  
   isGenerating = false;
+
+  // --- TABLA ROLLUP (Finanzas) ---
+  // MatTableDataSource se instancia aquí, dentro de la clase
+  dataSourceRollup = new MatTableDataSource<FinancieroRow>([]);
+  displayedColumnsRollup: string[] = ['mes', 'artista', 'citas', 'ingresos'];
+  
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   constructor(
     private fb: FormBuilder,
     private citasService: CitasService,
     private inventarioService: InventarioService,
-    private reportesService: ReportesService, // Inyectamos el servicio de reportes
+    private reportesService: ReportesService,
     private snackBar: MatSnackBar
   ) {
     this.reporteForm = this.fb.group({
@@ -61,7 +82,6 @@ export class Reportes implements OnInit {
       fecha_reporte: [new Date(), Validators.required],
       materiales_usados: [[], Validators.required],
       observaciones: [''],
-      // Campos informativos (solo lectura)
       cliente_nombre: [{value: '', disabled: true}],
       artista_nombre: [{value: '', disabled: true}],
       tipo_trabajo: [{value: '', disabled: true}]
@@ -71,10 +91,13 @@ export class Reportes implements OnInit {
   ngOnInit(): void {
     this.cargarListas();
     
-    // Al seleccionar una cita, llamamos al backend para obtener los datos cruzados (JOIN)
+    // Al seleccionar una cita, cargar sus detalles automáticamente
     this.reporteForm.get('id_cita')?.valueChanges.subscribe(id => {
       if(id) this.cargarDetalleCompleto(id);
     });
+
+    // Cargar la tabla financiera automáticamente
+    this.cargarReporteFinanciero();
   }
 
   cargarListas() {
@@ -82,70 +105,79 @@ export class Reportes implements OnInit {
     this.inventarioService.getMateriales().subscribe(data => this.listaMateriales = data);
   }
 
-  // --- AQUÍ ESTÁ LA LÓGICA QUE CUMPLE EL REQUERIMIENTO DE JOIN ---
-  cargarDetalleCompleto(idCita: number) {
-    this.reporteForm.patchValue({
-      cliente_nombre: 'Cargando...',
-      artista_nombre: 'Cargando...',
-      tipo_trabajo: 'Consultando base de datos...'
+  // --- LÓGICA REPORTE FINANCIERO (ROLLUP) ---
+  cargarReporteFinanciero() {
+    this.reportesService.getReporteFinancieroRollup().subscribe({
+      next: (data) => {
+        this.dataSourceRollup.data = data;
+        if(this.paginator) {
+          this.dataSourceRollup.paginator = this.paginator;
+        }
+      },
+      error: (err) => console.error('Error cargando finanzas:', err)
     });
+  }
 
+  // Helpers para identificar filas de subtotales/totales
+  isSubtotal(row: FinancieroRow): boolean {
+    return row.artista === null && row.mes !== null;
+  }
+
+  isGrandTotal(row: FinancieroRow): boolean {
+    return row.mes === null && row.artista === null;
+  }
+
+  // --- LÓGICA PDF ---
+  cargarDetalleCompleto(idCita: number) {
+    this.reporteForm.patchValue({ cliente_nombre: 'Cargando...', artista_nombre: 'Cargando...', tipo_trabajo: '...' });
+    
     this.reportesService.getDetalleCitaCompleto(idCita).subscribe({
       next: (data) => {
-        // Data ya viene con nombres reales gracias al SQL JOIN en el backend
         this.reporteForm.patchValue({
           cliente_nombre: `${data.cliente_nombre} ${data.cliente_apellido}`,
           artista_nombre: `${data.artista_nombre} ${data.artista_apellido}`,
-          tipo_trabajo: `Cita #${data.folio} - ${data.estado} (${data.artista_especialidad})`
+          tipo_trabajo: `Cita #${data.folio} - ${data.estado}`
         });
       },
-      error: (err) => {
-        console.error(err);
-        this.snackBar.open('Error al obtener detalles de la cita. Verifica que el backend tenga la ruta /api/reportes/cita/:id', 'Cerrar');
-        // Reset en caso de error
-        this.reporteForm.patchValue({
-          cliente_nombre: 'Error',
-          artista_nombre: 'Error',
-          tipo_trabajo: 'No disponible'
-        });
-      }
+      error: () => this.snackBar.open('Error al cargar detalles de la cita', 'Cerrar')
     });
   }
 
   generarPDF() {
     if (this.reporteForm.invalid) {
-      this.snackBar.open('Por favor selecciona una cita y los materiales utilizados.', 'Cerrar');
+      this.snackBar.open('Por favor completa todos los campos requeridos', 'Cerrar');
       return;
     }
 
     this.isGenerating = true;
     const formValues = this.reporteForm.getRawValue();
-    // Filtramos la lista completa de materiales para quedarnos solo con los seleccionados
+    
+    // Filtramos para obtener los objetos completos de los materiales seleccionados
     const materialesSeleccionados = this.listaMateriales.filter(m => formValues.materiales_usados.includes(m.id));
 
     const doc = new jsPDF();
 
-    // 1. Encabezado con estilo de marca
-    doc.setFillColor(74, 46, 31); // Café #4a2e1f
+    // 1. Encabezado con estilo de marca (Café)
+    doc.setFillColor(74, 46, 31); // #4a2e1f
     doc.rect(0, 0, 210, 40, 'F');
     
-    doc.setTextColor(243, 210, 178); // Crema #f3d2b2
+    doc.setTextColor(243, 210, 178); // #f3d2b2
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(22);
     doc.text('GANGSTER TATTOO STUDIO', 105, 20, { align: 'center' });
     doc.setFontSize(12);
-    doc.text('REPORTE OPERATIVO CONSOLIDADO', 105, 30, { align: 'center' });
+    doc.text('ACTA DE SERVICIO Y MATERIALES', 105, 30, { align: 'center' });
 
     // 2. Información General
     doc.setTextColor(0, 0, 0);
     doc.setFontSize(10);
-    doc.text(`Fecha de Emisión: ${formValues.fecha_reporte.toLocaleDateString()}`, 14, 50);
+    doc.text(`Fecha: ${formValues.fecha_reporte.toLocaleDateString()}`, 14, 50);
     doc.text(`Folio Cita: #${formValues.id_cita}`, 150, 50);
 
     doc.setDrawColor(74, 46, 31);
     doc.line(14, 55, 196, 55);
 
-    // 3. Detalles del Servicio (Datos obtenidos del JOIN)
+    // 3. Detalles del Servicio
     doc.setFontSize(11);
     doc.setFont('helvetica', 'bold');
     doc.text('DETALLES DEL SERVICIO', 14, 65);
@@ -153,53 +185,51 @@ export class Reportes implements OnInit {
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(10);
     doc.text(`Cliente: ${formValues.cliente_nombre}`, 14, 75);
-    doc.text(`Artista Encargado: ${formValues.artista_nombre}`, 14, 82);
+    doc.text(`Artista: ${formValues.artista_nombre}`, 14, 82);
     doc.text(`Descripción: ${formValues.tipo_trabajo}`, 14, 89);
 
-    // 4. Tabla de Materiales Utilizados
+    // 4. Tabla de Materiales (jspdf-autotable)
     doc.setFont('helvetica', 'bold');
-    doc.text('MATERIALES UTILIZADOS', 14, 105);
+    doc.text('MATERIALES CONSUMIDOS', 14, 105);
 
-    // Preparamos los datos para autoTable
     const tableData = materialesSeleccionados.map(m => [
       m.codigo, 
       m.nombre, 
-      '1 Unidad', // Dato estimado
+      '1 Unidad', 
       `$${m.precio_costo}`
     ]);
 
     autoTable(doc, {
       startY: 110,
-      head: [['SKU', 'Material', 'Cantidad', 'Costo Unit.']],
+      head: [['SKU', 'Material', 'Cantidad', 'Costo Est.']],
       body: tableData,
       theme: 'grid',
-      headStyles: { fillColor: [74, 46, 31], textColor: [243, 210, 178] }, // Colores de marca
+      headStyles: { fillColor: [74, 46, 31], textColor: [243, 210, 178] },
       styles: { fontSize: 9 }
     });
 
-    // 5. Observaciones y Firmas
+    // 5. Observaciones
     const finalY = (doc as any).lastAutoTable.finalY + 20;
     
     doc.setFont('helvetica', 'bold');
     doc.text('OBSERVACIONES:', 14, finalY);
     doc.setFont('helvetica', 'normal');
-    // splitTextToSize ajusta el texto largo para que no se salga de la página
-    const observacionesLines = doc.splitTextToSize(formValues.observaciones || 'Sin observaciones adicionales.', 180);
+    const observacionesLines = doc.splitTextToSize(formValues.observaciones || 'Sin observaciones.', 180);
     doc.text(observacionesLines, 14, finalY + 7);
 
-    // Espacio para firmas
+    // 6. Firmas
     const firmaY = finalY + 40;
     doc.setLineWidth(0.5);
     doc.line(30, firmaY, 90, firmaY);
     doc.text('Firma del Artista', 45, firmaY + 5);
 
     doc.line(120, firmaY, 180, firmaY);
-    doc.text('Conformidad del Cliente', 130, firmaY + 5);
+    doc.text('Firma del Cliente', 135, firmaY + 5);
 
-    // Guardar el archivo
-    doc.save(`Reporte_Gangster_Cita_${formValues.id_cita}.pdf`);
+    // Guardar archivo real
+    doc.save(`Reporte_Cita_${formValues.id_cita}.pdf`);
     
     this.isGenerating = false;
-    this.snackBar.open('PDF Generado correctamente', 'OK', { duration: 3000 });
+    this.snackBar.open('PDF descargado exitosamente', 'OK', { duration: 3000 });
   }
 }

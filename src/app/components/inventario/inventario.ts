@@ -26,6 +26,14 @@ export interface ProductoElement {
   activo: boolean;
 }
 
+// Nueva interfaz para el reporte
+export interface ProveedorReporte {
+  proveedor: string;
+  variedad_productos: number;
+  total_unidades_compradas: number;
+  ultima_compra: string;
+}
+
 @Component({
   selector: 'app-inventario',
   standalone: true,
@@ -59,6 +67,10 @@ export class Inventario implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
+  // NUEVO: Data source para el reporte de proveedores
+  dataSourceProveedores = new MatTableDataSource<ProveedorReporte>([]);
+  displayedColumnsProveedores: string[] = ['proveedor', 'variedad', 'total', 'fecha'];
+
   // 2. Inyectamos el servicio y el router
   constructor(
     private inventarioService: InventarioService, 
@@ -68,6 +80,7 @@ export class Inventario implements OnInit, AfterViewInit {
   ngOnInit() {
     this.cargarInventario();
     this.cargarInventarioBajo();
+    this.cargarReporteProveedores();
   }
 
   ngAfterViewInit() {
@@ -151,5 +164,14 @@ export class Inventario implements OnInit, AfterViewInit {
         error: (err) => console.error('Error eliminando material:', err)
       });
     }
+  }
+
+  cargarReporteProveedores() {
+    this.inventarioService.getReportePorProveedor().subscribe({
+      next: (data) => {
+        this.dataSourceProveedores.data = data;
+      },
+      error: (err) => console.error('Error cargando reporte proveedores:', err)
+    });
   }
 }
