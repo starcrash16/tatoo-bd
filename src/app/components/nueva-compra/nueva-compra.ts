@@ -57,6 +57,7 @@ export class NuevaCompra implements OnInit {
 
   ngOnInit() {
     this.cargarCatalogos();
+    this.escucharCambiosMaterial();
   }
 
   cargarCatalogos() {
@@ -69,6 +70,45 @@ export class NuevaCompra implements OnInit {
       next: (data) => this.materiales = data,
       error: (err) => console.error('Error materiales:', err)
     });
+  }
+
+  // --- LÓGICA DE AUTOCOMPLETADO ---
+  escucharCambiosMaterial() {
+    this.form.get('id_material')?.valueChanges.subscribe(materialId => {
+      if (materialId) {
+        this.autocompletarDatos(materialId);
+      }
+    });
+  }
+
+  autocompletarDatos(materialId: number) {
+    // 1. Buscar el objeto material completo en la lista cargada
+    const materialSeleccionado = this.materiales.find(m => m.id === materialId);
+    
+    if (materialSeleccionado) {
+      console.log('Material encontrado:', materialSeleccionado); // Debug para ver si llega el proveedor
+
+      const patchData: any = {};
+
+      // 2. Definir Precio (si existe historial)
+      if (materialSeleccionado.ultimo_precio_compra) {
+        patchData.precio_unitario = materialSeleccionado.ultimo_precio_compra;
+      }
+
+      // 3. Definir Proveedor (si existe historial)
+      if (materialSeleccionado.ultimo_proveedor_id) {
+        patchData.id_proveedor = materialSeleccionado.ultimo_proveedor_id;
+      }
+
+      // 4. Aplicar cambios al formulario
+      // Usamos emitEvent: false para no disparar bucles infinitos si tuvieras otros suscriptores
+      this.form.patchValue(patchData, { emitEvent: false });
+      
+      // Feedback visual opcional (SnackBar)
+      if (patchData.id_proveedor) {
+        this.snackBar.open('Proveedor y precio actualizados según historial.', 'Ok', { duration: 2000 });
+      }
+    }
   }
 
   get totalCalculado(): number {
@@ -86,12 +126,11 @@ export class NuevaCompra implements OnInit {
     this.isSubmitting = true;
     const val = this.form.value;
 
-    // Payload limpio sin usuarios
     const payload = {
       id_proveedor: Number(val.id_proveedor),
       numero_factura: String(val.numero_factura).trim(),
       total: this.totalCalculado, 
-      creado_por: null, // Enviamos null explícitamente
+      creado_por: null, 
       detalle: {
         id_material: Number(val.id_material),
         cantidad: Number(val.cantidad),

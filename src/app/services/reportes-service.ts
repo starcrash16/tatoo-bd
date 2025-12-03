@@ -24,4 +24,18 @@ export class ReportesService {
   getReporteFinancieroRollup(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/financiero-rollup`);
   }
+
+  // src/services/reportes-service.ts
+
+  // ... (métodos existentes) ...
+
+  // 4. Reporte de Comisiones (Usa la función Cursor del backend)
+  getComisionesMensuales(mes?: number, anio?: number): Observable<any> {
+    let params: any = {};
+    if (mes) params.mes = mes;
+    if (anio) params.anio = anio;
+    
+    // Retorna { periodo: "11/2025", datos: [...] }
+    return this.http.get<any>(`${this.apiUrl}/comisiones`, { params });
+  }
 }
