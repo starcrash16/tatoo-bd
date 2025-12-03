@@ -21,6 +21,7 @@ import { SesionesComponent } from './components/sesiones/sesiones';
 import { ArtistasDashboard } from './components/artistas-dashboard/artistas-dashboard';
 import { Compras } from './components/compras/compras';
 import { NuevaCompra } from './components/nueva-compra/nueva-compra';
+import { PagosComponent } from './components/pagos/pagos';
 
 
 export const routes: Routes = [
@@ -56,6 +57,7 @@ export const routes: Routes = [
       { path: 'clientes/expediente/:id', component: ExpedienteMedico},
       { path: 'sesiones', component: SesionesComponent },
       { path: 'reportes', component: Reportes },
+      { path: 'pagos', component: PagosComponent },
       { path: 'artistas', component: ArtistasDashboard },
       { path: 'compras', component: Compras },
       { path: 'compras/nueva', component: NuevaCompra }

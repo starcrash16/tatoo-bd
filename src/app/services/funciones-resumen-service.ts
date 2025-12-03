@@ -11,19 +11,7 @@ export class FuncionesResumenService {
 
   constructor(private http: HttpClient) {}
 
-  getFuncionesResumen(): Observable<{ sum_ingresos_anuales: number; avg_pago_anual: number; decode_clasificacion: { alto: number; medio: number; bajo: number; } }>
-  {
-    console.log('[FuncionesResumenService] Solicitando:', this.apiUrl);
-    const obs = this.http.get<{ sum_ingresos_anuales: number; avg_pago_anual: number; decode_clasificacion: { alto: number; medio: number; bajo: number; } }>(this.apiUrl)
-      .pipe(
-        tap((data) => {
-          console.log('[FuncionesResumenService] Respuesta OK:', data);
-        }),
-        catchError((err) => {
-          console.error('[FuncionesResumenService] Error en solicitud:', err);
-          throw err;
-        })
-      );
-    return obs;
+  getFuncionesResumen(): Observable<any> {
+    return this.http.get<any>(this.apiUrl);
   }
 }

@@ -1,0 +1,131 @@
+/* --- LAYOUT GENERAL --- */
+.pagos-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  color: #4a2e1f;
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.text-coffee { color: #4a2e1f !important; }
+.fw-bold { font-weight: 600; }
+
+/* --- HEADER --- */
+.section-header {
+  margin-bottom: 2rem;
+  border-left: 5px solid #4a2e1f;
+  padding-left: 1.5rem;
+}
+
+.section-header h1 {
+  font-family: 'Anton', sans-serif;
+  font-size: 2.5rem;
+  text-transform: uppercase;
+  margin: 0;
+  color: #4a2e1f;
+}
+
+/* --- CARDS --- */
+.custom-card {
+  background-color: #fdf5eb;
+  border-radius: 16px;
+  border: 1px solid rgba(74, 46, 31, 0.1);
+  box-shadow: 0 4px 20px rgba(74, 46, 31, 0.08);
+}
+
+/* --- BADGE DE TOTAL --- */
+.total-badge {
+  background-color: #4a2e1f;
+  color: #f3d2b2;
+  padding: 8px 16px;
+  border-radius: 8px;
+  text-align: right;
+  box-shadow: 0 4px 10px rgba(74, 46, 31, 0.2);
+}
+
+.total-badge small {
+  display: block;
+  font-size: 0.7rem;
+  opacity: 0.8;
+  letter-spacing: 1px;
+}
+
+.total-badge span {
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+
+/* --- TABLA --- */
+.table-container {
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(74, 46, 31, 0.12);
+}
+
+th.mat-mdc-header-cell {
+  background-color: #4a2e1f !important;
+  color: #f3d2b2 !important;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+}
+
+td.mat-mdc-cell {
+  color: #3e2723;
+  font-size: 0.9rem;
+}
+
+tr.mat-mdc-row:hover {
+  background-color: rgba(74, 46, 31, 0.04);
+}
+
+.amount-cell {
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  color: #2e7d32; /* Verde dinero */
+  font-size: 1rem;
+}
+
+/* --- CHIPS METODOS --- */
+.method-chip {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  border: 1px solid transparent;
+}
+
+.method-chip.efectivo { background-color: #e8f5e9; color: #2e7d32; border-color: #a5d6a7; }
+.method-chip.tarjeta { background-color: #e3f2fd; color: #1565c0; border-color: #90caf9; }
+.method-chip.transferencia { background-color: #f3e5f5; color: #7b1fa2; border-color: #ce93d8; }
+
+/* --- STATUS BADGE --- */
+.status-badge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.status-badge.pagado {
+  background-color: #4a2e1f;
+  color: #f3d2b2;
+}
+
+.status-badge.pendiente {
+  background-color: #fff3e0;
+  color: #e65100;
+}
+
+/* --- INPUTS --- */
+::ng-deep .custom-form-field .mat-mdc-text-field-wrapper {
+  background-color: #ffffff !important;
+  border-radius: 8px;
+}

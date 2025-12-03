@@ -13,4 +13,8 @@ export class PagosService {
   getPagos(): Observable<any[]> {
     return this.http.get<any[]>(this.apiUrl);
   }
+  // Opcional: Obtener un pago específico
+  getPagoById(id: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/pagos/${id}`);
+  }
 }
