@@ -5,6 +5,7 @@ import { CitasService } from '../../services/citas-service';
 import { InventarioService } from '../../services/inventario-service';
 import { PagosService } from '../../services/pagos-service';
 import { ReportesService } from '../../services/reportes-service';
+import { FuncionesResumenService } from '../../services/funciones-resumen-service';
 
 // Material & Charts
 import { MatCardModule } from '@angular/material/card';
@@ -13,7 +14,8 @@ import { MatListModule } from '@angular/material/list';
 import { MatDividerModule } from '@angular/material/divider';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration, ChartOptions } from 'chart.js';
-import { forkJoin } from 'rxjs';
+import { forkJoin, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-estadisticas',
@@ -42,6 +44,24 @@ export class Estadisticas implements OnInit {
 
   citasUrgentes: any[] = [];
   materialesBajos: any[] = [];
+
+  // Datos de funciones resumen (SUM, AVG, DECODE)
+  ingresosAnuales: number = 0;
+  promedioPagoAnual: number = 0;
+  clasificacionPagos: { alto: number; medio: number; bajo: number } = { alto: 0, medio: 0, bajo: 0 };
+  ingresosAnualesStr: string = 'MX$0.00';
+  promedioPagoAnualStr: string = 'MX$0.00';
+
+  private parseNumber(val: any): number {
+    if (val === null || val === undefined) return 0;
+    if (typeof val === 'number') return val;
+    if (typeof val === 'string') {
+      const cleaned = val.replace(/[^0-9.,-]/g, '').replace(/,/g, '');
+      const num = parseFloat(cleaned);
+      return isNaN(num) ? 0 : num;
+    }
+    return Number(val) || 0;
+  }
 
   // Configuración Gráfica de Barras (Ingresos)
   public barChartData: ChartConfiguration<'bar'>['data'] = {
@@ -82,7 +102,8 @@ export class Estadisticas implements OnInit {
     private citasService: CitasService,
     private inventarioService: InventarioService,
     private pagosService: PagosService,
-    private reportesService: ReportesService, // Inyectamos servicio de reportes
+    private reportesService: ReportesService, // Servicio de reportes (citas detalladas)
+    private funcionesResumenService: FuncionesResumenService, // Servicio exclusivo funciones_resumen
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -95,12 +116,31 @@ export class Estadisticas implements OnInit {
     
     // Ejecutamos todas las peticiones en paralelo
     forkJoin({
-      citas: this.citasService.getCitas(), // Para KPIs numéricos y gráficas
-      materiales: this.inventarioService.getMateriales(),
-      pagos: this.pagosService.getPagos(),
-      citasDetalladas: this.reportesService.getProximasCitas() // <--- NUEVO: Datos con JOIN para la lista visual
+      citas: this.citasService.getCitas().pipe(
+        catchError(err => { console.error('Error citas:', err); return of([]); })
+      ), // Para KPIs numéricos y gráficas
+      materiales: this.inventarioService.getMateriales().pipe(
+        catchError(err => { console.error('Error materiales:', err); return of([]); })
+      ),
+      pagos: this.pagosService.getPagos().pipe(
+        catchError(err => { console.error('Error pagos:', err); return of([]); })
+      ),
+      citasDetalladas: this.reportesService.getProximasCitas().pipe(
+        catchError(err => { console.error('Error proximas citas:', err); return of([]); })
+      ), // Datos con JOIN para la lista visual
+      funcionesResumen: this.funcionesResumenService.getFuncionesResumen().pipe(
+        catchError(err => {
+          console.error('Error funciones_resumen:', err);
+          return of({
+            sum_ingresos_anuales: 0,
+            avg_pago_anual: 0,
+            decode_clasificacion: { alto: 0, medio: 0, bajo: 0 }
+          });
+        })
+      ) // SUM, AVG y DECODE
     }).subscribe({
       next: (res) => {
+        console.log('Dashboard combined data:', res);
         // Procesar datos para KPIs y Gráficas
         if (res.citas) this.procesarKPIsCitas(res.citas);
         if (res.materiales) this.procesarInventario(res.materiales);
@@ -109,6 +149,49 @@ export class Estadisticas implements OnInit {
         // Asignar directamente la lista detallada que viene del backend (JOIN)
         if (res.citasDetalladas) {
           this.citasUrgentes = res.citasDetalladas;
+        }
+
+        // Procesar funciones resumen (SUM, AVG, DECODE)
+        if (res.funcionesResumen) {
+          let fr = res.funcionesResumen as any;
+          // Si el backend regresa un arreglo, tomar el primer elemento
+          if (Array.isArray(fr)) {
+            fr = fr[0] ?? {};
+          }
+          console.log('Funciones resumen (raw):', fr);
+          // Mapeo exacto según los logs: sum.totalIngresosAnuales y avg.promedioPagoAnual
+          const sumVal = (fr?.sum?.totalIngresosAnuales)
+            ?? fr.sum_ingresos_anuales ?? fr.sumIngresosAnuales ?? fr.sum ?? fr.ingresosAnuales ?? fr.total ?? (fr?.sum?.ingresos_anuales);
+          const avgVal = (fr?.avg?.promedioPagoAnual)
+            ?? fr.avg_pago_anual ?? fr.avgPagoAnual ?? fr.avg ?? fr.promedioPagoAnual ?? (fr?.avg?.pago_anual);
+          const decodeVal = (fr?.decode?.clasificacionPagos)
+            ?? fr.decode_clasificacion ?? fr.decodeClasificacion ?? fr.clasificacion ?? fr.pagosClasificacion ?? fr.decode;
+
+          this.ingresosAnuales = this.parseNumber(sumVal);
+          this.promedioPagoAnual = this.parseNumber(avgVal);
+          this.ingresosAnualesStr = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(this.ingresosAnuales);
+          this.promedioPagoAnualStr = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(this.promedioPagoAnual);
+
+          // Procesar decode: puede venir como objeto {alto, medio, bajo} o como arreglo de {categoria, cantidad}
+          let alto = 0, medio = 0, bajo = 0;
+          const dec = decodeVal ?? { alto: 0, medio: 0, bajo: 0 };
+          if (Array.isArray(dec)) {
+            // Buscar por nombre de categoría (tolerante a mayúsculas/minúsculas)
+            dec.forEach((item: any) => {
+              const cat = (item.categoria ?? item.tipo ?? item.nombre ?? '').toString().toLowerCase();
+              const cantidad = this.parseNumber(item.cantidad ?? item.total ?? item.valor);
+              if (cat.includes('alto')) alto = cantidad;
+              else if (cat.includes('medio')) medio = cantidad;
+              else if (cat.includes('bajo')) bajo = cantidad;
+            });
+          } else {
+            alto = this.parseNumber(dec.alto ?? dec.Alto ?? 0);
+            medio = this.parseNumber(dec.medio ?? dec.Medio ?? 0);
+            bajo = this.parseNumber(dec.bajo ?? dec.Bajo ?? 0);
+          }
+          this.clasificacionPagos = { alto, medio, bajo };
+        } else {
+          console.warn('Funciones resumen no disponible en la respuesta.');
         }
 
         // Forzar actualización visual de las gráficas
