@@ -4,8 +4,7 @@
     <button mat-button routerLink="/dashboard/citas" class="back-btn mb-2">
       <mat-icon>arrow_back</mat-icon> Volver a Citas
     </button>
-    <h1 class="main-title">{{ isEditMode ? 'EDITAR CITA' : 'AGENDAR NUEVA CITA' }}</h1>
-    <p class="subtitle">{{ isEditMode ? 'Modifique los detalles de la sesión' : 'Complete los detalles para programar la sesión' }}</p>
+    <h1 class="main-title">{{ isEditMode ? 'GESTIÓN DE CITA' : 'NUEVA CITA' }}</h1>
   </div>
 
   <mat-card class="form-card">
@@ -13,37 +12,28 @@
       
       <form [formGroup]="citaForm" (ngSubmit)="onSubmit()">
         
+        <h3 class="section-title">Datos Generales</h3>
         <div class="row">
-          <!-- Cliente -->
           <div class="col-md-6">
             <mat-form-field appearance="outline" class="w-100 custom-field">
               <mat-label>Cliente</mat-label>
               <mat-select formControlName="id_cliente">
-                <mat-option *ngFor="let cliente of clientes" [value]="cliente.id">
-                  {{cliente.nombre}} {{cliente.apellido}}
-                </mat-option>
+                <mat-option *ngFor="let c of clientes" [value]="c.id">{{c.nombre}} {{c.apellido}}</mat-option>
               </mat-select>
-              <mat-error>Requerido</mat-error>
             </mat-form-field>
           </div>
-
-          <!-- Artista -->
           <div class="col-md-6">
             <mat-form-field appearance="outline" class="w-100 custom-field">
               <mat-label>Artista</mat-label>
               <mat-select formControlName="id_artista">
-                <mat-option *ngFor="let artista of artistas" [value]="artista.id">
-                  {{artista.nombre_usuario}} <!-- O el nombre real si tu query lo trae -->
-                </mat-option>
+                <mat-option *ngFor="let a of artistas" [value]="a.id">{{a.nombre_usuario}}</mat-option>
               </mat-select>
-              <mat-error>Requerido</mat-error>
             </mat-form-field>
           </div>
         </div>
 
         <div class="row">
-          <!-- Fecha -->
-          <div class="col-md-6">
+          <div class="col-md-4">
             <mat-form-field appearance="outline" class="w-100 custom-field">
               <mat-label>Fecha</mat-label>
               <input matInput [matDatepicker]="picker" formControlName="fecha">
@@ -51,63 +41,157 @@
               <mat-datepicker #picker></mat-datepicker>
             </mat-form-field>
           </div>
-
-          <!-- Hora -->
-          <div class="col-md-6">
+          <div class="col-md-4">
             <mat-form-field appearance="outline" class="w-100 custom-field">
-              <mat-label>Hora (24h)</mat-label>
+              <mat-label>Hora</mat-label>
               <input matInput type="time" formControlName="hora">
             </mat-form-field>
           </div>
-        </div>
-
-        <div class="row">
-          <!-- Duración -->
-          <div class="col-md-6">
+          
+          <div class="col-md-4">
             <mat-form-field appearance="outline" class="w-100 custom-field">
-              <mat-label>Duración Estimada (min)</mat-label>
-              <input matInput type="number" formControlName="duracion_estimada_minutos">
-            </mat-form-field>
-          </div>
-
-          <!-- Total -->
-          <div class="col-md-6">
-            <mat-form-field appearance="outline" class="w-100 custom-field">
-              <mat-label>Costo Total Estimado ($)</mat-label>
-              <input matInput type="number" formControlName="total_estimado">
-              <mat-icon matPrefix class="me-2">attach_money</mat-icon>
-            </mat-form-field>
-          </div>
-        </div>
-
-        <div class="row" *ngIf="isEditMode">
-          <div class="col-md-12">
-            <mat-form-field appearance="outline" class="w-100 custom-field">
-              <mat-label>Estado de la Cita</mat-label>
+              <mat-label>Estado Actual</mat-label>
               <mat-select formControlName="estado">
-                <mat-option *ngFor="let estado of estadosCita" [value]="estado">
-                  {{ estado | uppercase }}
+                <mat-option *ngFor="let est of estadosCita" [value]="est" class="uppercase-option">
+                  {{ est | uppercase }}
                 </mat-option>
               </mat-select>
-              <mat-hint>Cambiar el estado generará un registro histórico en la sesión.</mat-hint>
             </mat-form-field>
           </div>
         </div>
 
-        <!-- Notas -->
+        <mat-divider class="my-4"></mat-divider>
+
+        <div *ngIf="citaForm.get('estado')?.value === 'confirmada'" class="animate-section">
+          <h3 class="section-title text-success"><mat-icon>brush</mat-icon> Detalles del Diseño</h3>
+          <div class="row">
+            <div class="col-md-6">
+              <mat-form-field appearance="outline" class="w-100 custom-field">
+                <mat-label>Categoría del Diseño</mat-label>
+                <mat-select formControlName="id_categoria_diseno">
+                  <mat-option *ngFor="let cat of categoriasDiseno" [value]="cat.id">{{cat.nombre}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-md-4">
+              <mat-form-field appearance="outline" class="w-100 custom-field">
+                <mat-label>ID Diseño / Referencia</mat-label>
+                <input matInput formControlName="id_diseno" placeholder="Opcional">
+              </mat-form-field>
+            </div>
+            <div class="col-md-2">
+              <mat-form-field appearance="outline" class="w-100 custom-field">
+                <mat-label>Cant.</mat-label>
+                <input matInput type="number" formControlName="cantidad_diseno">
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="citaForm.get('estado')?.value === 'en_progreso'" class="animate-section">
+          <h3 class="section-title text-warning"><mat-icon>inventory_2</mat-icon> Configuración de Sesión</h3>
+          
+          <div class="row">
+            <div class="col-md-6">
+              <mat-form-field appearance="outline" class="w-100 custom-field">
+                <mat-label>Duración Estimada (min)</mat-label>
+                <input matInput type="number" formControlName="duracion_estimada_minutos">
+              </mat-form-field>
+            </div>
+            <div class="col-md-6">
+              <mat-form-field appearance="outline" class="w-100 custom-field">
+                <mat-label>Costo Total ($)</mat-label>
+                <input matInput type="number" formControlName="total_estimado">
+                <mat-icon matPrefix>attach_money</mat-icon>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="materiales-box mt-3">
+            <h4 class="mb-3">Selección de Materiales</h4>
+            <div class="d-flex gap-2 align-items-center">
+              <mat-form-field appearance="outline" class="flex-grow-1 custom-field">
+                <mat-label>Material de Inventario</mat-label>
+                <mat-select [formControl]="materialControl">
+                  <mat-option *ngFor="let mat of listaMateriales" [value]="mat.id">
+                    {{mat.codigo}} - {{mat.nombre}} (Disp: {{mat.cantidad_existencia}})
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              
+              <mat-form-field appearance="outline" style="width: 100px;" class="custom-field">
+                <mat-label>Cant.</mat-label>
+                <input matInput type="number" [formControl]="cantidadMaterialControl" min="1">
+              </mat-form-field>
+
+              <button mat-mini-fab color="primary" type="button" (click)="agregarMaterial()" [disabled]="!materialControl.value">
+                <mat-icon>add</mat-icon>
+              </button>
+            </div>
+
+            <mat-list role="list" class="material-list">
+              <mat-list-item *ngFor="let item of materialesSeleccionados; let i = index" role="listitem">
+                <div class="d-flex justify-content-between w-100 align-items-center">
+                  <span>{{item.nombre}} (x{{item.cantidad}})</span>
+                  <button mat-icon-button color="warn" type="button" (click)="eliminarMaterial(i)">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </mat-list-item>
+              <div *ngIf="materialesSeleccionados.length === 0" class="text-muted fst-italic p-2">
+                No hay materiales seleccionados para esta sesión.
+              </div>
+            </mat-list>
+          </div>
+        </div>
+
+        <div *ngIf="citaForm.get('estado')?.value === 'completada'" class="animate-section">
+          <h3 class="section-title text-primary"><mat-icon>done_all</mat-icon> Cierre de Cita</h3>
+          <div class="row">
+            <div class="col-md-6">
+              <mat-form-field appearance="outline" class="w-100 custom-field">
+                <mat-label>Duración Final Real (min)</mat-label>
+                <input matInput type="number" formControlName="duracion_estimada_minutos">
+              </mat-form-field>
+            </div>
+            <div class="col-md-6">
+              <mat-form-field appearance="outline" class="w-100 custom-field">
+                <mat-label>Monto Final Cobrado ($)</mat-label>
+                <input matInput type="number" formControlName="total_estimado">
+                <mat-icon matPrefix>attach_money</mat-icon>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+
+        <mat-divider class="my-4"></mat-divider>
+
+        <h3 class="section-title">
+          <mat-icon>notes</mat-icon> Notas Adicionales
+        </h3>
         <mat-form-field appearance="outline" class="w-100 custom-field">
-          <mat-label>Notas adicionales</mat-label>
-          <textarea matInput formControlName="notas" rows="3" placeholder="Detalles del diseño, zona del cuerpo, etc."></textarea>
+          <mat-label>Observaciones, comentarios o instrucciones especiales</mat-label>
+          <textarea matInput formControlName="notas" rows="4" placeholder="Escriba aquí cualquier información adicional relevante..."></textarea>
+          <mat-icon matPrefix>description</mat-icon>
         </mat-form-field>
 
-        <div class="d-flex justify-content-end mt-3">
+        <!-- Resumen del estado del formulario -->
+        <div *ngIf="citaForm.invalid" class="alert alert-warning mt-3" role="alert">
+          <mat-icon class="align-middle">warning</mat-icon>
+          <span class="ms-2">Algunos campos requeridos están incompletos. Por favor, verifique el formulario.</span>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mt-4">
+          <button mat-stroked-button type="button" routerLink="/dashboard/citas" class="cancel-btn">
+            <mat-icon>close</mat-icon> CANCELAR
+          </button>
           <button mat-flat-button class="save-btn py-4 px-5" [disabled]="citaForm.invalid || isSubmitting">
-            {{ isSubmitting ? 'GUARDANDO...' : (isEditMode ? 'ACTUALIZAR CITA' : 'CONFIRMAR AGENDAR') }}
+            <mat-icon class="me-2">{{ isSubmitting ? 'hourglass_empty' : 'save' }}</mat-icon>
+            {{ isSubmitting ? 'PROCESANDO...' : (isEditMode ? 'ACTUALIZAR CITA' : 'CREAR CITA') }}
           </button>
         </div>
 
       </form>
-
     </mat-card-content>
   </mat-card>
 </div>
