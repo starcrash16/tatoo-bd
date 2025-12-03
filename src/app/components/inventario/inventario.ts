@@ -53,6 +53,9 @@ export class Inventario implements OnInit, AfterViewInit {
   // Inicializamos la tabla vacía
   dataSource = new MatTableDataSource<ProductoElement>([]);
 
+  // Data source for low-stock materials
+  dataSourceLowStock = new MatTableDataSource<ProductoElement>([]);
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
@@ -64,6 +67,7 @@ export class Inventario implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.cargarInventario();
+    this.cargarInventarioBajo();
   }
 
   ngAfterViewInit() {
@@ -93,6 +97,18 @@ export class Inventario implements OnInit, AfterViewInit {
         }
       },
       error: (err) => console.error('Error cargando inventario:', err)
+    });
+  }
+
+  // Method to fetch low-stock materials
+  cargarInventarioBajo() {
+    console.log('Llamando a cargarInventarioBajo...');
+    this.inventarioService.getInventarioBajo().subscribe({
+      next: (data) => {
+        console.log('Datos recibidos de getInventarioBajo:', data);
+        this.dataSourceLowStock.data = data.materiales; // Asignar solo el arreglo de materiales
+      },
+      error: (err) => console.error('Error cargando inventario bajo:', err)
     });
   }
 
