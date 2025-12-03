@@ -18,6 +18,18 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDividerModule } from '@angular/material/divider'; // <--- Para separar secciones
 import { MatListModule } from '@angular/material/list';
 
+interface Diseno {
+  id: string;
+  titulo: string;
+  descripcion: string;
+  url_imagen: string;
+  complejidad: number;
+  precio_base: string;
+  creado_por: string;
+  creado_en: string;
+  nombre_categoria: string;
+}
+
 @Component({
   selector: 'app-nueva-cita',
   standalone: true,
@@ -48,14 +60,13 @@ export class NuevaCita implements OnInit {
   artistas: any[] = [];
   listaMateriales: any[] = []; // Inventario completo
   
-  // Listas simuladas para diseño (Deberían venir de un servicio)
-  categoriasDiseno: any[] = [
-    { id: 1, nombre: 'Blackwork' },
-    { id: 2, nombre: 'Realismo' },
-    { id: 3, nombre: 'Neotradicional' },
-    { id: 4, nombre: 'Acuarela' },
-    { id: 5, nombre: 'Mandala' }
-  ];
+  // Agrega estas variables para los diseños
+  listaDisenosFiltrada: Diseno[] = []; // Diseños que coinciden con la categoría seleccionada
+  mapaDisenos: { [key: string]: Diseno[] } = {}; // Mapa por nombre_categoria
+  categorias: string[] = []; // Vector de nombres únicos de categorías
+  
+  // 1. CAMBIO: Inicializar vacío, ya no usaremos datos falsos
+  categoriasDiseno: any[] = [];
   
   // Lista local para materiales seleccionados en el formulario
   materialesSeleccionados: any[] = []; 
@@ -108,6 +119,11 @@ export class NuevaCita implements OnInit {
       this.actualizarValidaciones(estado);
     });
 
+    // ESCUCHA DE CAMBIOS: Cuando cambia la categoría, filtramos los diseños
+    this.citaForm.get('id_categoria_diseno')?.valueChanges.subscribe(categoriaId => {
+      this.seleccionarCategoria(categoriaId);
+    });
+
     this.route.params.subscribe(params => {
       if (params['id']) {
         this.isEditMode = true;
@@ -128,13 +144,21 @@ export class NuevaCita implements OnInit {
   cargarCatalogos() {
     this.citasService.getClientes().subscribe(data => this.clientes = data);
     this.citasService.getArtistas().subscribe(data => this.artistas = data);
-    
-    // Cargar inventario para la sección "en_progreso"
     this.inventarioService.getMateriales().subscribe(data => this.listaMateriales = data);
+
+    this.cargarDatos();
 
     if (this.isEditMode && this.citaId) {
       this.cargarCita(this.citaId);
     }
+  }
+
+  cargarDatos() {
+    // Cargar diseños con categoría incluida desde la nueva API
+    this.citasService.getDisenosConCategoria().subscribe((data: Diseno[]) => {
+      console.log('Diseños recibidos con categoría:', data);
+      this.construirMapa(data);
+    });
   }
 
   cargarCita(id: number) {
@@ -198,6 +222,57 @@ export class NuevaCita implements OnInit {
     duracionCtrl?.updateValueAndValidity();
     totalCtrl?.updateValueAndValidity();
     catDisenoCtrl?.updateValueAndValidity();
+  }
+
+  construirMapa(disenos: Diseno[]) {
+    this.mapaDisenos = {};
+    const categoriasSet = new Set<string>();
+
+    disenos.forEach(diseno => {
+      const categoria = diseno.nombre_categoria;
+      
+      if (!categoria || categoria.trim() === '') {
+        console.warn('Diseño sin nombre_categoria recibido:', diseno);
+        return;
+      }
+
+      // Agregar categoría al set para obtener valores únicos
+      categoriasSet.add(categoria);
+
+      // Crear el array si no existe
+      if (!this.mapaDisenos[categoria]) {
+        this.mapaDisenos[categoria] = [];
+      }
+
+      this.mapaDisenos[categoria].push(diseno);
+    });
+
+    // Convertir Set a Array y ordenar alfabéticamente
+    this.categorias = Array.from(categoriasSet).sort();
+
+    console.log('Mapa construido por categoría:', this.mapaDisenos);
+    console.log('Categorías únicas:', this.categorias);
+  }
+
+  seleccionarCategoria(nombreCategoria: any) {
+    if (!nombreCategoria) {
+      this.listaDisenosFiltrada = [];
+      return;
+    }
+
+    // Búsqueda O(1) usando el nombre de categoría como clave
+    this.listaDisenosFiltrada = this.mapaDisenos[nombreCategoria] || [];
+
+    console.log(`Categoría "${nombreCategoria}" seleccionada. Diseños disponibles:`, this.listaDisenosFiltrada);
+
+    // Limpiar diseño seleccionado si ya no pertenece a esta categoría
+    const disenoActualId = this.citaForm.get('id_diseno')?.value;
+    if (disenoActualId) {
+      const existe = this.listaDisenosFiltrada.find(d => d.id == disenoActualId);
+      if (!existe) {
+        this.citaForm.patchValue({ id_diseno: '' });
+      }
+    }
   }
 
   // --- LÓGICA DE MATERIALES ---
@@ -298,7 +373,8 @@ export class NuevaCita implements OnInit {
 
     if (formVal.estado === 'confirmada') {
       payload.detalles_diseno = {
-        id_categoria: formVal.id_categoria_diseno,
+        nombre_categoria: formVal.id_categoria_diseno, // Ahora es nombre de categoría, no ID
+        id_diseno: formVal.id_diseno,
         cantidad: formVal.cantidad_diseno
       };
     }

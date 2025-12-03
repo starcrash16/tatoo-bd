@@ -44,6 +44,19 @@ export class CitasService {
     return this.http.get<any[]>(`${this.apiUrl}/artistas`);
   }
 
+  getDisenos(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/disenos`);
+  }
+
+  getCategorias(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/categorias`);
+  }
+
+  // Nueva API que retorna diseños con nombre_categoria incluido
+  getDisenosConCategoria(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/disenos`);
+  }
+
   // En CitasService (o SesionesService si lo creaste aparte)
 
 // Método para buscar sesiones con filtros

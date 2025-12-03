@@ -64,25 +64,39 @@
 
         <div *ngIf="citaForm.get('estado')?.value === 'confirmada'" class="animate-section">
           <h3 class="section-title text-success"><mat-icon>brush</mat-icon> Detalles del Diseño</h3>
+          
           <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-4">
               <mat-form-field appearance="outline" class="w-100 custom-field">
-                <mat-label>Categoría del Diseño</mat-label>
+                <mat-label>Categoría</mat-label>
                 <mat-select formControlName="id_categoria_diseno">
-                  <mat-option *ngFor="let cat of categoriasDiseno" [value]="cat.id">{{cat.nombre}}</mat-option>
+                  <mat-option *ngFor="let cat of categorias" [value]="cat">
+                    {{cat | titlecase}}
+                  </mat-option>
                 </mat-select>
               </mat-form-field>
             </div>
-            <div class="col-md-4">
+
+            <div class="col-md-6">
               <mat-form-field appearance="outline" class="w-100 custom-field">
-                <mat-label>ID Diseño / Referencia</mat-label>
-                <input matInput formControlName="id_diseno" placeholder="Opcional">
+                <mat-label>Seleccionar Diseño</mat-label>
+                
+                <mat-select formControlName="id_diseno">
+                  <mat-option *ngFor="let diseno of listaDisenosFiltrada" [value]="diseno.id">
+                    {{diseno.titulo}} - ${{diseno.precio_base}}
+                  </mat-option>
+                  
+                  <mat-option *ngIf="listaDisenosFiltrada.length === 0" disabled>
+                    --- Selecciona una categoría válida ---
+                  </mat-option>
+                </mat-select>
               </mat-form-field>
             </div>
+
             <div class="col-md-2">
               <mat-form-field appearance="outline" class="w-100 custom-field">
                 <mat-label>Cant.</mat-label>
-                <input matInput type="number" formControlName="cantidad_diseno">
+                <input matInput type="number" formControlName="cantidad_diseno" min="1">
               </mat-form-field>
             </div>
           </div>

@@ -19,6 +19,15 @@
     <p class="mt-3">Cargando resumen...</p>
   </div>
 
+  <!-- Mensaje de error -->
+  <div *ngIf="!cargando && !cita" class="text-center py-5">
+    <mat-icon class="error-icon" color="warn">error_outline</mat-icon>
+    <p class="mt-3">No se pudo cargar el resumen de la cita</p>
+    <button mat-flat-button color="primary" (click)="volver()">
+      Volver a Citas
+    </button>
+  </div>
+
   <!-- Contenido del resumen -->
   <div *ngIf="!cargando && cita" class="row">
     
@@ -30,10 +39,10 @@
             <div class="avatar-large">
               <mat-icon>event</mat-icon>
             </div>
-            <h2 class="client-name mt-3">Cita #{{ cita.id_cita || '-' }}</h2>
+            <h2 class="client-name mt-3">Cita #{{ cita.id || '-' }}</h2>
             <mat-chip-set class="justify-content-center mt-2">
-                <mat-chip [class]="'status-' + (cita.estado_cita?.toLowerCase() || 'pendiente')">
-                    {{ cita.estado_cita || '-' }}
+                <mat-chip [class]="'status-' + (cita.estado?.toLowerCase() || 'programada')">
+                    {{ cita.estado | uppercase }}
                 </mat-chip>
             </mat-chip-set>
           </div>
@@ -54,27 +63,19 @@
               </div>
             </div>
 
-            <div class="info-row">
+            <div class="info-row" *ngIf="cita.duracion_estimada_minutos">
+              <mat-icon class="info-icon">schedule</mat-icon>
+              <div class="info-content">
+                <span class="info-label">Duración</span>
+                <span class="info-value">{{ cita.duracion_estimada_minutos }} minutos</span>
+              </div>
+            </div>
+
+            <div class="info-row" *ngIf="cita.total_estimado">
               <mat-icon class="info-icon">attach_money</mat-icon>
               <div class="info-content">
                 <span class="info-label">Total Estimado</span>
-                <span class="info-value">{{ cita.total_estimado || '-' }}</span>
-              </div>
-            </div>
-
-             <div class="info-row">
-              <mat-icon class="info-icon">payments</mat-icon>
-              <div class="info-content">
-                <span class="info-label">Total Pagado</span>
-                <span class="info-value">{{ cita.total_pagado || '-' }}</span>
-              </div>
-            </div>
-
-             <div class="info-row">
-              <mat-icon class="info-icon">format_list_numbered</mat-icon>
-              <div class="info-content">
-                <span class="info-label">Total Sesiones</span>
-                <span class="info-value">{{ cita.total_sesiones || '-' }}</span>
+                <span class="info-value">{{ cita.total_estimado | currency }}</span>
               </div>
             </div>
 
@@ -83,13 +84,21 @@
               <div class="info-content">
                 <span class="info-label">Estado</span>
                 <span class="badge" [ngClass]="{
-                  'badge-pendiente': cita.estado_cita?.toLowerCase() === 'pendiente',
-                  'badge-confirmada': cita.estado_cita?.toLowerCase() === 'confirmada',
-                  'badge-cancelada': cita.estado_cita?.toLowerCase() === 'cancelada',
-                  'badge-completada': cita.estado_cita?.toLowerCase() === 'completada'
+                  'badge-pendiente': cita.estado?.toLowerCase() === 'programada',
+                  'badge-confirmada': cita.estado?.toLowerCase() === 'confirmada',
+                  'badge-cancelada': cita.estado?.toLowerCase() === 'cancelada',
+                  'badge-completada': cita.estado?.toLowerCase() === 'completada'
                 }">
-                  {{ cita.estado_cita || '-' }}
+                  {{ cita.estado | uppercase }}
                 </span>
+              </div>
+            </div>
+
+            <div class="info-row" *ngIf="cita.notas">
+              <mat-icon class="info-icon">notes</mat-icon>
+              <div class="info-content">
+                <span class="info-label">Notas</span>
+                <span class="info-value">{{ cita.notas }}</span>
               </div>
             </div>
 
@@ -106,22 +115,34 @@
         <div class="col-md-6 mb-4">
             <mat-card class="info-card h-100">
                 <mat-card-header>
-                    <mat-card-title>Cliente</mat-card-title>
+                    <mat-card-title>
+                      <mat-icon>person</mat-icon> Cliente
+                    </mat-card-title>
                 </mat-card-header>
                 <mat-card-content>
-                    <div class="info-row">
-                        <mat-icon class="info-icon">person</mat-icon>
+                    <div class="info-row" *ngIf="clienteInfo">
+                        <mat-icon class="info-icon">badge</mat-icon>
                         <div class="info-content">
-                            <span class="info-label">Nombre</span>
-                            <span class="info-value">{{ cita.nombre_cliente || '-' }}</span>
+                            <span class="info-label">Nombre Completo</span>
+                            <span class="info-value">{{ clienteInfo.nombre }} {{ clienteInfo.apellido }}</span>
                         </div>
                     </div>
-                    <div class="info-row">
+                    <div class="info-row" *ngIf="clienteInfo?.telefono">
                         <mat-icon class="info-icon">phone</mat-icon>
                         <div class="info-content">
                             <span class="info-label">Teléfono</span>
-                            <span class="info-value">{{ cita.telefono_cliente || '-' }}</span>
+                            <span class="info-value">{{ clienteInfo.telefono }}</span>
                         </div>
+                    </div>
+                    <div class="info-row" *ngIf="clienteInfo?.email">
+                        <mat-icon class="info-icon">email</mat-icon>
+                        <div class="info-content">
+                            <span class="info-label">Email</span>
+                            <span class="info-value">{{ clienteInfo.email }}</span>
+                        </div>
+                    </div>
+                    <div *ngIf="!clienteInfo" class="text-muted fst-italic p-2">
+                      Cargando información del cliente...
                     </div>
                 </mat-card-content>
             </mat-card>
@@ -130,39 +151,105 @@
         <div class="col-md-6 mb-4">
             <mat-card class="info-card h-100">
                 <mat-card-header>
-                    <mat-card-title>Artista</mat-card-title>
+                    <mat-card-title>
+                      <mat-icon>brush</mat-icon> Artista
+                    </mat-card-title>
                 </mat-card-header>
                 <mat-card-content>
-                    <div class="info-row">
-                        <mat-icon class="info-icon">brush</mat-icon>
+                    <div class="info-row" *ngIf="artistaInfo">
+                        <mat-icon class="info-icon">person</mat-icon>
                         <div class="info-content">
                             <span class="info-label">Nombre</span>
-                            <span class="info-value">{{ cita.nombre_artista || '-' }}</span>
+                            <span class="info-value">{{ artistaInfo.nombre_usuario }}</span>
                         </div>
+                    </div>
+                    <div class="info-row" *ngIf="artistaInfo?.email">
+                        <mat-icon class="info-icon">email</mat-icon>
+                        <div class="info-content">
+                            <span class="info-label">Email</span>
+                            <span class="info-value">{{ artistaInfo.email }}</span>
+                        </div>
+                    </div>
+                    <div *ngIf="!artistaInfo" class="text-muted fst-italic p-2">
+                      Cargando información del artista...
                     </div>
                 </mat-card-content>
             </mat-card>
         </div>
       </div>
 
-      <!-- Diseño -->
-      <mat-card class="info-card mb-4">
+      <!-- Diseño (solo si existe) -->
+      <mat-card class="info-card mb-4" *ngIf="disenoInfo || cita.estado === 'confirmada' || cita.estado === 'completada'">
         <mat-card-header>
-            <mat-card-title>Diseño</mat-card-title>
+            <mat-card-title>
+              <mat-icon>palette</mat-icon> Diseño
+            </mat-card-title>
         </mat-card-header>
         <mat-card-content>
-            <div class="info-row">
-                <mat-icon class="info-icon">image</mat-icon>
-                <div class="info-content">
-                    <span class="info-label">Título del Diseño</span>
-                    <span class="info-value">{{ cita.titulo_diseno || '-' }}</span>
-                </div>
+            <div *ngIf="disenoInfo">
+              <div class="info-row">
+                  <mat-icon class="info-icon">title</mat-icon>
+                  <div class="info-content">
+                      <span class="info-label">Título</span>
+                      <span class="info-value">{{ disenoInfo.titulo }}</span>
+                  </div>
+              </div>
+              <div class="info-row">
+                  <mat-icon class="info-icon">category</mat-icon>
+                  <div class="info-content">
+                      <span class="info-label">Categoría</span>
+                      <span class="info-value">{{ categoriaSeleccionada | titlecase }}</span>
+                  </div>
+              </div>
+              <div class="info-row">
+                  <mat-icon class="info-icon">attach_money</mat-icon>
+                  <div class="info-content">
+                      <span class="info-label">Precio Base</span>
+                      <span class="info-value">${{ disenoInfo.precio_base }}</span>
+                  </div>
+              </div>
+              <div class="info-row" *ngIf="disenoInfo.descripcion">
+                  <mat-icon class="info-icon">description</mat-icon>
+                  <div class="info-content">
+                      <span class="info-label">Descripción</span>
+                      <span class="info-value">{{ disenoInfo.descripcion }}</span>
+                  </div>
+              </div>
+              <div *ngIf="disenoInfo.url_imagen" class="design-image-container mt-3">
+                  <img [src]="disenoInfo.url_imagen" alt="Diseño del tatuaje" class="design-image">
+              </div>
             </div>
-            <div *ngIf="cita.imagen_diseno" class="design-image-container mt-3">
-                <img [src]="cita.imagen_diseno" alt="Diseño del tatuaje" class="design-image">
+            <div *ngIf="!disenoInfo" class="text-muted fst-italic p-2">
+                No se ha seleccionado diseño para esta cita
             </div>
-            <div *ngIf="!cita.imagen_diseno" class="text-muted mt-3">
-                No hay imagen de diseño disponible.
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Materiales (solo si existen) -->
+      <mat-card class="info-card mb-4" *ngIf="materialesUsados && materialesUsados.length > 0">
+        <mat-card-header>
+            <mat-card-title>
+              <mat-icon>inventory_2</mat-icon> Materiales Utilizados
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Código</th>
+                    <th>Material</th>
+                    <th>Cantidad</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let mat of materialesUsados">
+                    <td>{{ mat.codigo }}</td>
+                    <td>{{ mat.nombre }}</td>
+                    <td>{{ mat.cantidad }}</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
         </mat-card-content>
       </mat-card>
@@ -170,3 +257,4 @@
     </div>
   </div>
 </div>
+    <!-- trailing duplicate removed -->
