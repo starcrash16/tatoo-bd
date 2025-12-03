@@ -1,9 +1,10 @@
-import { Component, OnInit, ViewChildren, QueryList, ChangeDetectorRef } from '@angular/core'; // 1. IMPORTAR ViewChildren y QueryList
+import { Component, OnInit, ViewChildren, QueryList, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 // Servicios
 import { CitasService } from '../../services/citas-service';
 import { InventarioService } from '../../services/inventario-service';
 import { PagosService } from '../../services/pagos-service';
+import { ReportesService } from '../../services/reportes-service';
 
 // Material & Charts
 import { MatCardModule } from '@angular/material/card';
@@ -30,7 +31,7 @@ import { forkJoin } from 'rxjs';
 })
 export class Estadisticas implements OnInit {
   
-  // 2. CAMBIO CRÍTICO: Usamos ViewChildren para obtener TODAS las gráficas, no solo la primera
+  // Usamos ViewChildren para poder actualizar TODAS las gráficas (Barra y Dona)
   @ViewChildren(BaseChartDirective) charts: QueryList<BaseChartDirective> | undefined;
 
   kpis = [
@@ -42,7 +43,7 @@ export class Estadisticas implements OnInit {
   citasUrgentes: any[] = [];
   materialesBajos: any[] = [];
 
-  // GRÁFICA BARRAS
+  // Configuración Gráfica de Barras (Ingresos)
   public barChartData: ChartConfiguration<'bar'>['data'] = {
     labels: [],
     datasets: [{ data: [], label: 'Ingresos ($)', backgroundColor: '#4a2e1f', hoverBackgroundColor: '#6d4c41' }]
@@ -58,7 +59,7 @@ export class Estadisticas implements OnInit {
     }
   };
 
-  // GRÁFICA DONA
+  // Configuración Gráfica de Dona (Estados)
   public doughnutChartData: ChartConfiguration<'doughnut'>['data'] = {
     labels: ['Programada', 'Confirmada', 'En Progreso', 'Completada', 'Cancelada'],
     datasets: [{ 
@@ -81,6 +82,7 @@ export class Estadisticas implements OnInit {
     private citasService: CitasService,
     private inventarioService: InventarioService,
     private pagosService: PagosService,
+    private reportesService: ReportesService, // Inyectamos servicio de reportes
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -91,49 +93,53 @@ export class Estadisticas implements OnInit {
   cargarDatosDashboard() {
     console.log('🔄 Cargando datos del dashboard...');
     
+    // Ejecutamos todas las peticiones en paralelo
     forkJoin({
-      citas: this.citasService.getCitas(),
+      citas: this.citasService.getCitas(), // Para KPIs numéricos y gráficas
       materiales: this.inventarioService.getMateriales(),
-      pagos: this.pagosService.getPagos()
+      pagos: this.pagosService.getPagos(),
+      citasDetalladas: this.reportesService.getProximasCitas() // <--- NUEVO: Datos con JOIN para la lista visual
     }).subscribe({
       next: (res) => {
-        console.log('✅ Datos recibidos:', res);
-        
-        if (res.citas) this.procesarCitas(res.citas);
+        // Procesar datos para KPIs y Gráficas
+        if (res.citas) this.procesarKPIsCitas(res.citas);
         if (res.materiales) this.procesarInventario(res.materiales);
         if (res.pagos) this.procesarFinanzas(res.pagos);
-
-        // 3. ACTUALIZAR TODAS LAS GRÁFICAS
-        // Iteramos sobre la lista de gráficas encontradas en el HTML y las actualizamos una por una
-        this.charts?.forEach(chart => {
-          chart.update();
-        });
         
+        // Asignar directamente la lista detallada que viene del backend (JOIN)
+        if (res.citasDetalladas) {
+          this.citasUrgentes = res.citasDetalladas;
+        }
+
+        // Forzar actualización visual de las gráficas
+        this.charts?.forEach(c => c.update());
+        
+        // Evitar error NG0100 (ExpressionChangedAfterItHasBeenChecked)
         this.cdr.detectChanges(); 
       },
       error: (err) => console.error('❌ Error cargando dashboard:', err)
     });
   }
 
-  procesarCitas(citas: any[]) {
+  procesarKPIsCitas(citas: any[]) {
     const hoy = new Date();
     const hoyStr = hoy.toDateString();
 
-    // KPI: Citas Hoy
+    // 1. KPI: Citas Hoy
     const citasHoy = citas.filter(c => {
       const fechaCita = new Date(c.fecha_programada); 
       return fechaCita.toDateString() === hoyStr;
     });
     this.kpis[0].valor = citasHoy.length.toString();
 
-    // Gráfica Dona
+    // 2. Gráfica Dona: Conteo de Estados
     let countProgramada = 0, countConfirmada = 0, countProgreso = 0, countCompletada = 0, countCancelada = 0;
 
     citas.forEach(c => {
       const estado = c.estado ? c.estado.toLowerCase().trim() : '';
       if (estado === 'programada') countProgramada++;
       else if (estado === 'confirmada') countConfirmada++;
-      else if (estado === 'en_progreso' || estado === 'en progreso') countProgreso++;
+      else if (estado.includes('progreso')) countProgreso++; // "en_progreso" o "en progreso"
       else if (estado === 'completada') countCompletada++;
       else if (estado === 'cancelada') countCancelada++;
     });
@@ -141,17 +147,6 @@ export class Estadisticas implements OnInit {
     this.doughnutChartData.datasets[0].data = [
       countProgramada, countConfirmada, countProgreso, countCompletada, countCancelada
     ];
-
-    // Próximas Citas
-    this.citasUrgentes = citas
-      .filter(c => {
-        const fecha = new Date(c.fecha_programada);
-        const ahora = new Date();
-        ahora.setHours(0,0,0,0);
-        return fecha >= ahora && c.estado !== 'completada' && c.estado !== 'cancelada';
-      })
-      .sort((a, b) => new Date(a.fecha_programada).getTime() - new Date(b.fecha_programada).getTime())
-      .slice(0, 3);
   }
 
   procesarInventario(materiales: any[]) {
@@ -163,7 +158,7 @@ export class Estadisticas implements OnInit {
     });
     
     this.kpis[2].valor = bajos.length.toString();
-    this.materialesBajos = bajos.slice(0, 3);
+    this.materialesBajos = bajos.slice(0, 3); // Solo mostrar 3 alertas
   }
 
   procesarFinanzas(pagos: any[]) {
@@ -171,7 +166,7 @@ export class Estadisticas implements OnInit {
     const mesActual = hoy.getMonth();
     const anoActual = hoy.getFullYear();
 
-    // KPI: Ingresos del Mes
+    // KPI: Ingresos del Mes Actual
     const ingresosMes = pagos
       .filter(p => {
         const fechaPago = new Date(p.fecha_pago); 
@@ -181,7 +176,7 @@ export class Estadisticas implements OnInit {
 
     this.kpis[1].valor = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(ingresosMes);
 
-    // Gráfica Barras
+    // Gráfica Barras: Últimos 6 meses
     const etiquetas = [];
     const datos = [];
     
