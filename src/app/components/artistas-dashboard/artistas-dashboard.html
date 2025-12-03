@@ -1,0 +1,94 @@
+<div class="artistas-admin">
+  <h1 class="page-title">Artistas y sus Citas</h1>
+
+  <table mat-table [dataSource]="dataSource" matSort #mainSort="matSort" class="mat-elevation-z2 full-width styled-table">
+    <!-- Consecutivo -->
+    <ng-container matColumnDef="consecutivo">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>No. de Trabajo</th>
+      <td mat-cell *matCellDef="let row">{{ row.consecutivo }}</td>
+    </ng-container>
+
+    <!-- Artista -->
+    <ng-container matColumnDef="artista">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Artista</th>
+      <td mat-cell *matCellDef="let row">{{ row.artista?.toString().replace(/[_-]/g, ' ') }}</td>
+    </ng-container>
+
+    <!-- ID de la Cita -->
+    <ng-container matColumnDef="citaId">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>ID de la Cita</th>
+      <td mat-cell *matCellDef="let row">{{ row.citaId }}</td>
+    </ng-container>
+
+    <!-- Fecha Programada -->
+    <ng-container matColumnDef="fechaProgramada">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha Programada</th>
+      <td mat-cell *matCellDef="let row">{{ row.fechaProgramada | date:'dd/MM/yyyy HH:mm' }}</td>
+    </ng-container>
+
+    <!-- Estado -->
+    <ng-container matColumnDef="estado">
+      <th mat-header-cell *matHeaderCellDef>Estado</th>
+      <td mat-cell *matCellDef="let row">
+        <span class="estado" [class.programada]="row.estado === 'programada'"
+                              [class.completada]="row.estado === 'completada'"
+                              [class.cancelada]="row.estado === 'cancelada'"
+                              [class.reprogramada]="row.estado === 'reprogramada'"
+                              [class.confirmada]="row.estado === 'confirmada'"
+                              [class.no_asistio]="row.estado === 'no_asistio'">
+          {{ row.estado?.toString().replace(/[_-]/g, ' ') }}
+        </span>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  <mat-paginator #mainPaginator [pageSize]="5" [pageSizeOptions]="[5, 10, 25, 50]" showFirstLastButtons></mat-paginator>
+
+  <h2 class="page-title" style="margin-top:24px;">Categorías vs Artistas</h2>
+  <table mat-table [dataSource]="dataSourceCube" matSort #cubeSort="matSort" class="mat-elevation-z2 full-width styled-table">
+    <!-- Categoría -->
+    <ng-container matColumnDef="categoria">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Categoría</th>
+      <td mat-cell *matCellDef="let row">{{ row.categoria?.toString().replace(/[_-]/g, ' ') }}</td>
+    </ng-container>
+
+    <!-- Artista -->
+    <ng-container matColumnDef="artista">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Artista</th>
+      <td mat-cell *matCellDef="let row">{{ row.artista?.toString().replace(/[_-]/g, ' ') }}</td>
+    </ng-container>
+
+    <!-- Total de Citas -->
+    <ng-container matColumnDef="totalCitas">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Total de Citas</th>
+      <td mat-cell *matCellDef="let row">{{ row.totalCitas }}</td>
+    </ng-container>
+
+    <!-- Total Ingresos -->
+    <ng-container matColumnDef="totalMonto">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Total Ingresos</th>
+      <td mat-cell *matCellDef="let row">{{ row.totalMonto | currency:'MXN':'symbol':'1.0-0' }}</td>
+    </ng-container>
+
+    <!-- Tipo de Fila -->
+    <ng-container matColumnDef="tipoFila">
+      <th mat-header-cell *matHeaderCellDef>Tipo</th>
+      <td mat-cell *matCellDef="let row">
+        <span class="tipo-chip" [class.detalle]="row.tipoFila === 'detalle'"
+                                 [class.total_categoria]="row.tipoFila === 'total_categoria'"
+                                 [class.total_artista]="row.tipoFila === 'total_artista'"
+                                 [class.total_general]="row.tipoFila === 'total_general'">
+          {{ row.tipoFila?.toString().replace(/[_-]/g, ' ') }}
+        </span>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedCubeColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedCubeColumns;"></tr>
+  </table>
+
+  <mat-paginator #cubePaginator [pageSize]="10" [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons></mat-paginator>
+</div>

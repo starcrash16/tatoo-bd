@@ -1,8 +1,12 @@
 /* --- CONTENEDOR PRINCIPAL --- */
 .nueva-cita-container {
-  max-width: 900px;
+  max-width: 1200px;
   margin: 0 auto;
+  padding: 2rem 1rem;
   color: #4a2e1f;
+}
+
+.fade-in {
   animation: fadeIn 0.5s ease-out;
 }
 
@@ -11,100 +15,296 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* --- BOTÓN VOLVER (Estilo mejorado) --- */
+/* --- HEADER SECTION --- */
+.header-section {
+  margin-bottom: 2rem;
+}
+
 .back-btn {
-  color: #6d4c41 !important; /* Café medio */
+  color: #4a2e1f !important;
   font-family: 'Inter', sans-serif;
   font-weight: 600;
-  font-size: 0.95rem;
-  letter-spacing: 0.5px;
   transition: all 0.3s ease;
-  padding-left: 0 !important; /* Alineación limpia a la izquierda */
 }
 
 .back-btn:hover {
-  color: #4a2e1f !important; /* Café oscuro al pasar mouse */
-  background-color: rgba(74, 46, 31, 0.08) !important; /* Fondo sutil */
-  transform: translateX(-5px); /* Animación de "regresar" hacia la izquierda */
-  border-radius: 8px;
+  background-color: rgba(74, 46, 31, 0.08) !important;
+  transform: translateX(-5px);
 }
 
-/* --- ENCABEZADOS --- */
 .main-title {
   font-family: 'Anton', sans-serif;
-  color: #4a2e1f;
+  color: #4a2e1f !important;
   font-size: 2.5rem;
-  margin-bottom: 5px;
+  margin: 0;
   text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-.subtitle {
-  font-family: 'Inter', sans-serif;
-  color: #6d4c41;
-  font-size: 1rem;
+  letter-spacing: 2px;
+  border-left: 5px solid #4a2e1f;
+  padding-left: 1.5rem;
 }
 
 /* --- TARJETA DEL FORMULARIO --- */
 .form-card {
-  background-color: #fdf5eb !important; /* Fondo crema claro */
+  background-color: #fdf5eb !important;
   border-radius: 16px !important;
-  box-shadow: 0 4px 20px rgba(74, 46, 31, 0.08) !important;
+  box-shadow: 0 4px 20px rgba(74, 46, 31, 0.12) !important;
   border: 1px solid rgba(74, 46, 31, 0.1) !important;
 }
 
-/* --- INPUTS PERSONALIZADOS (Estilo Consistente) --- */
+/* --- TÍTULOS DE SECCIÓN --- */
+.section-title {
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 1.2rem;
+  margin-bottom: 1.5rem;
+  margin-top: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid rgba(74, 46, 31, 0.15);
+}
+
+.section-title mat-icon {
+  font-size: 1.5rem;
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.text-success { color: #2e7d32 !important; }
+.text-warning { color: #ef6c00 !important; }
+.text-primary { color: #1565c0 !important; }
+
+/* --- CAMPOS DEL FORMULARIO --- */
 ::ng-deep .custom-field .mat-mdc-text-field-wrapper {
   background-color: #ffffff !important;
-  border-radius: 8px;
-  border: 1px solid rgba(74, 46, 31, 0.1); /* Borde sutil por defecto */
+  border-radius: 8px !important;
+  border: 1px solid rgba(74, 46, 31, 0.15) !important;
+  transition: all 0.3s ease;
 }
 
-::ng-deep .custom-field .mat-mdc-form-field-focus-overlay {
-  background-color: transparent !important;
+::ng-deep .custom-field .mat-mdc-text-field-wrapper:hover {
+  border-color: rgba(74, 46, 31, 0.3) !important;
+  box-shadow: 0 2px 8px rgba(74, 46, 31, 0.08);
 }
 
-/* Color del borde al enfocar (Focus) */
-::ng-deep .custom-field.mat-focused .mat-mdc-notched-outline__border {
+::ng-deep .custom-field.mat-focused .mat-mdc-text-field-wrapper {
   border-color: #4a2e1f !important;
-  border-width: 2px !important;
+  box-shadow: 0 0 0 3px rgba(74, 46, 31, 0.1) !important;
 }
 
-/* Color del label flotante */
-::ng-deep .custom-field.mat-focused .mat-mdc-floating-label {
-  color: #4a2e1f !important;
-}
-
-/* Color de los iconos dentro del input */
-::ng-deep .custom-field .mat-icon {
-  color: #6d4c41;
-}
-
-/* Color del texto escrito */
-::ng-deep .mat-mdc-input-element {
-  color: #4a2e1f !important;
+::ng-deep .custom-field .mat-mdc-form-field-label {
+  color: #6d4c41 !important;
+  font-family: 'Inter', sans-serif;
   font-weight: 500;
 }
 
-/* --- BOTÓN CONFIRMAR AGENDAR --- */
-.save-btn {
-  background-color: #4a2e1f !important; /* Café oscuro marca */
-  color: #f3d2b2 !important; /* Texto crema contraste */
+::ng-deep .custom-field .mat-mdc-input-element,
+::ng-deep .custom-field .mat-mdc-select-value {
+  color: #4a2e1f !important;
+  font-weight: 500;
   font-family: 'Inter', sans-serif;
-  font-weight: 700;
-  letter-spacing: 2px;
-  border-radius: 8px !important;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(74, 46, 31, 0.2);
 }
 
-.save-btn:hover:not([disabled]) {
-  background-color: #2b1a10 !important; /* Café más oscuro */
+::ng-deep .mat-mdc-form-field-icon-suffix,
+::ng-deep .mat-mdc-form-field-icon-prefix {
+  color: #6d4c41 !important;
+}
+
+/* --- ANIMACIÓN SECCIONES DINÁMICAS --- */
+.animate-section {
+  animation: slideDown 0.4s ease-out;
+  background-color: rgba(255, 255, 255, 0.6);
+  border: 2px dashed rgba(74, 46, 31, 0.2);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+}
+
+@keyframes slideDown {
+  from { 
+    opacity: 0; 
+    transform: translateY(-15px);
+    max-height: 0;
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0);
+    max-height: 1000px;
+  }
+}
+
+/* --- CAJA DE MATERIALES --- */
+.materiales-box {
+  background: linear-gradient(135deg, #ffffff 0%, #f9f9f9 100%);
+  border: 2px solid rgba(74, 46, 31, 0.12);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 12px rgba(74, 46, 31, 0.06);
+}
+
+.materiales-box h4 {
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  color: #4a2e1f;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+.material-list {
+  max-height: 250px;
+  overflow-y: auto;
+  border-top: 2px solid rgba(74, 46, 31, 0.1);
+  margin-top: 1rem;
+  padding-top: 1rem;
+}
+
+::ng-deep .material-list .mat-mdc-list-item {
+  background-color: rgba(74, 46, 31, 0.03);
+  border-radius: 6px;
+  margin-bottom: 0.5rem;
+  border: 1px solid rgba(74, 46, 31, 0.08);
+  transition: all 0.2s ease;
+}
+
+::ng-deep .material-list .mat-mdc-list-item:hover {
+  background-color: rgba(74, 46, 31, 0.08);
+  transform: translateX(5px);
+}
+
+.material-list .d-flex span {
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  color: #3e2723;
+}
+
+.text-muted {
+  color: #8d6e63 !important;
+  font-size: 0.9rem;
+}
+
+/* --- OPCIONES DE SELECT --- */
+.uppercase-option {
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* --- BOTÓN GUARDAR --- */
+.save-btn {
+  background-color: #4a2e1f !important;
+  color: #f3d2b2 !important;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  letter-spacing: 1px;
+  border-radius: 8px !important;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(74, 46, 31, 0.25);
+  min-width: 200px;
+  text-transform: uppercase;
+}
+
+.save-btn:hover:not(:disabled) {
+  background-color: #2b1a10 !important;
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(74, 46, 31, 0.3);
+  box-shadow: 0 6px 16px rgba(74, 46, 31, 0.35);
+}
+
+.save-btn:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(74, 46, 31, 0.3);
 }
 
 .save-btn:disabled {
-  background-color: #8d6e63 !important;
-  opacity: 0.7;
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* --- BOTÓN CANCELAR --- */
+.cancel-btn {
+  color: #4a2e1f !important;
+  border: 2px solid #4a2e1f !important;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  letter-spacing: 1px;
+  border-radius: 8px !important;
+  transition: all 0.3s ease;
+  min-width: 150px;
+  text-transform: uppercase;
+}
+
+.cancel-btn:hover {
+  background-color: rgba(74, 46, 31, 0.08) !important;
+  transform: translateY(-2px);
+}
+
+/* --- ALERTA --- */
+.alert {
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.alert-warning {
+  background-color: #fff3e0;
+  border: 1px solid #ffb74d;
+  color: #e65100;
+}
+
+/* --- BOTÓN AGREGAR MATERIAL --- */
+::ng-deep .mat-mdc-mini-fab {
+  background-color: #4a2e1f !important;
+  color: #f3d2b2 !important;
+}
+
+::ng-deep .mat-mdc-mini-fab:hover:not(:disabled) {
+  background-color: #2b1a10 !important;
+  transform: scale(1.1);
+}
+
+::ng-deep .mat-mdc-mini-fab:disabled {
+  opacity: 0.4;
+}
+
+/* --- DIVIDER --- */
+::ng-deep .mat-divider {
+  border-top-color: rgba(74, 46, 31, 0.15) !important;
+  margin: 2rem 0 !important;
+}
+
+/* --- DATEPICKER --- */
+::ng-deep .mat-datepicker-toggle {
+  color: #6d4c41 !important;
+}
+
+::ng-deep .mat-mdc-icon-button.mat-mdc-button-base {
+  color: #6d4c41 !important;
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 768px) {
+  .main-title {
+    font-size: 2rem;
+  }
+  
+  .section-title {
+    font-size: 1rem;
+  }
+  
+  .animate-section {
+    padding: 1rem;
+  }
+  
+  .materiales-box {
+    padding: 1rem;
+  }
+  
+  .save-btn {
+    width: 100%;
+  }
 }

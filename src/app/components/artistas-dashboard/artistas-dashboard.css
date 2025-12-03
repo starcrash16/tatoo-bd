@@ -1,0 +1,49 @@
+.artistas-admin { padding: 16px; }
+.page-title { margin-bottom: 16px; font-weight: 700; letter-spacing: .5px; }
+.full-width { width: 100%; }
+
+/* Estado chips respetando paleta existente */
+.estado { 
+	padding: 4px 12px; 
+	border-radius: 999px; 
+	font-size: 0.82rem; 
+	font-weight: 600; 
+	text-transform: uppercase; 
+	letter-spacing: .3px; 
+	border: 1px solid rgba(0,0,0,0.08);
+}
+/* Paleta estilo 'Sesiones' */
+.estado.programada { background: #e3f2fd; color: #1e88e5; border-color: #bbdefb; }
+.estado.completada { background: #e8f5e9; color: #43a047; border-color: #c8e6c9; }
+.estado.cancelada { background: #ffebee; color: #e53935; border-color: #ffcdd2; }
+.estado.reprogramada { background: #fff8e1; color: #fb8c00; border-color: #ffe0b2; }
+.estado.confirmada { background: #ede7f6; color: #8e24aa; border-color: #d1c4e9; }
+.estado.no_asistio { background: #fbe9e7; color: #d84315; border-color: #ffccbc; }
+
+/* Apariencia coherente con otras tablas (compacta y con zebra) */
+.styled-table { border-radius: 10px; overflow: hidden; }
+.styled-table th { font-weight: 600; background: #5a3a2a; color: #fff; }
+.styled-table tr.mat-row:nth-child(even) { background: rgba(255,255,255,0.65); }
+.styled-table tr.mat-row:nth-child(odd) { background: rgba(255,255,255,0.9); }
+.styled-table td, .styled-table th { padding: 12px 14px; }
+.styled-table .mat-sort-header-container { align-items: center; }
+
+/* Paginador estilo similar */
+.mat-mdc-paginator { background: transparent; }
+.mat-mdc-paginator .mat-mdc-paginator-container { gap: 8px; }
+.mat-mdc-paginator .mat-mdc-paginator-page-size { border: 1px solid rgba(0,0,0,0.12); border-radius: 8px; padding: 2px 6px; }
+
+/* Chips para tipoFila del CUBE */
+.tipo-chip { 
+	padding: 4px 12px; 
+	border-radius: 999px; 
+	font-size: 0.82rem; 
+	font-weight: 600; 
+	text-transform: uppercase; 
+	letter-spacing: .3px; 
+	border: 1px solid rgba(0,0,0,0.08);
+}
+.tipo-chip.detalle { background: #e0f7fa; color: #006064; border-color: #b2ebf2; }
+.tipo-chip.total_categoria { background: #fff8e1; color: #e65100; border-color: #ffe0b2; }
+.tipo-chip.total_artista { background: #ede7f6; color: #4527a0; border-color: #d1c4e9; }
+.tipo-chip.total_general { background: #e8f5e9; color: #1b5e20; border-color: #c8e6c9; }
